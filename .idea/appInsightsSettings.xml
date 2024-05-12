@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="dev.happypets" />
+                  <option name="mobileSdkAppId" value="1:570773277485:android:ca5e57613a2a266489e1a4" />
+                  <option name="projectId" value="happypetsapp-4c699" />
+                  <option name="projectNumber" value="570773277485" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
