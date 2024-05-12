@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_bg_color"
+    tools:context=".Activities.NewAnswerActivity">
+
+    <ImageView
+        android:id="@+id/img_back_from_answer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:src="@drawable/arrow_back_24"/>
+
+    <LinearLayout
+        android:id="@+id/chosen_question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginHorizontal="40dp"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:background="@color/gray_bg">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/actual_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Title"
+            android:textSize="18sp"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/actual_body"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:padding="4dp"
+            android:gravity="start"
+            android:textSize="15sp"
+            android:maxLines="6"
+            android:text="Body"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/img_kind"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"/>
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycle_answers"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginHorizontal="40dp"
+        android:background="@color/white"
+        android:orientation="vertical"
+        tools:listitem="@layout/answer_item"
+        android:layout_below="@id/chosen_question"/>
+
+    <EditText
+        android:id="@+id/et_answer"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginHorizontal="40dp"
+        android:background="@color/white"
+        android:padding="4dp"
+        android:gravity="start"
+        android:hint="Answer here"
+        android:layout_below="@id/recycle_answers"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_respond"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/logo_color"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="40dp"
+        android:text="Respond"
+        android:layout_below="@id/et_answer"/>
+
+</RelativeLayout>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/app_bg_color">
+
+    <TextView
+        android:id="@+id/welcome_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_alignParentStart="true"
+        android:text="Hello "
+        android:fontFamily="@font/poppins"
+        android:textSize="25sp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/question_updates"
+        android:layout_width="match_parent"
+        android:layout_height="132dp"
+        android:layout_marginHorizontal="30dp"
+        android:background="@color/gray_bg"
+        android:layout_below="@id/welcome_msg"/>
+
+    <TextView
+        android:id="@+id/header_animals"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="20dp"
+        android:text="All Animals"
+        android:layout_below="@id/question_updates"/>
+
+    <GridView
+        android:id="@+id/animals_choose"
+        android:layout_width="match_parent"
+        android:layout_height="260dp"
+        tools:listitem="@layout/animal_item"
+        android:scrollbars="none"
+        android:numColumns="3"
+        android:layout_marginHorizontal="30dp"
+        android:layout_below="@id/header_animals"/>
+
+    <TextView
+        android:id="@+id/header_vets"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="20dp"
+        android:text="Nearby Vets"
+        android:layout_below="@id/animals_choose"/>
+
+
+</RelativeLayout>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_bg_color"
+    tools:context=".Activities.NewQuestionActivity">
+
+    <ImageView
+        android:id="@+id/img_back_from_question"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:src="@drawable/arrow_back_24"/>
+
+    <LinearLayout
+        android:id="@+id/new_question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginHorizontal="40dp"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:background="@color/gray_bg">
+
+        <EditText
+            android:id="@+id/question_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:hint="Title"/>
+
+        <EditText
+            android:id="@+id/question_body"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:padding="4dp"
+            android:gravity="start"
+            android:textSize="18sp"
+            android:maxLines="6"
+            android:background="@color/white"
+            android:hint="Body"/>
+
+        <Spinner
+            android:id="@+id/spinner_animal"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_gravity="end"
+            android:prompt="Animal"/>
+
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_publish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Publish"
+        android:backgroundTint="@color/logo_color"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="40dp"
+        android:layout_below="@id/new_question"/>
+
+
+</RelativeLayout>
