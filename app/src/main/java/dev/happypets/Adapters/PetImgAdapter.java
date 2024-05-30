@@ -20,8 +20,8 @@ import dev.happypets.R;
 
 public class PetImgAdapter extends RecyclerView.Adapter<PetImgAdapter.PetViewHolder> {
 
-    private final Context context;
-    private final ArrayList<AnimalType> petKinds;
+    private Context context;
+    private ArrayList<AnimalType> petKinds;
 
     public PetImgAdapter(Context context, ArrayList<AnimalType> kinds) {
         this.context = context;
@@ -60,5 +60,8 @@ public class PetImgAdapter extends RecyclerView.Adapter<PetImgAdapter.PetViewHol
         return petKinds == null ? 0 : petKinds.size();
     }
 
+    public AnimalType getItem(int position) {
+        return petKinds.get(position);
+    }
 
 }

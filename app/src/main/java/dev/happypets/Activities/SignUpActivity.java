@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -21,7 +22,7 @@ import dev.happypets.R;
 public class SignUpActivity extends AppCompatActivity {
 
     FirebaseAuth mAuth;
-    EditText et_email, et_name, et_password;
+    TextInputEditText et_email, et_name, et_password;
     MaterialButton btn_signup;
 
     @Override

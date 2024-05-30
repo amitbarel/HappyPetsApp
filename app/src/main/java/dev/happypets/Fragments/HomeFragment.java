@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+import dev.happypets.Adapters.GridAdapter;
 import dev.happypets.Adapters.PetImgAdapter;
 import dev.happypets.Database.DataManager;
 import dev.happypets.Objects.AnimalType;
@@ -39,6 +40,7 @@ public class HomeFragment extends Fragment {
         animalTypes = view.findViewById(R.id.animals_choose);
         kinds = dataManager.getAnimalTypes();
         PetImgAdapter adapter = new PetImgAdapter(getContext(), kinds);
-        animalTypes.setAdapter(adapter);
+        GridAdapter gridAdapter = new GridAdapter(getContext(), adapter);
+        animalTypes.setAdapter(gridAdapter);
     }
 }

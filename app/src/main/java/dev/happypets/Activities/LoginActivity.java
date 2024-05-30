@@ -8,6 +8,8 @@ import android.util.Patterns;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -16,7 +18,7 @@ import dev.happypets.R;
 public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    private EditText txt_email, txt_password;
+    private TextInputEditText txt_email, txt_password;
     private MaterialButton btn_login;
 
     @Override
