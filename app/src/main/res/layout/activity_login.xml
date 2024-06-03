@@ -56,6 +56,18 @@
             android:layout_height="wrap_content"
             android:text="Login"
             android:backgroundTint="@color/logo_color"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:backgroundTint="@color/app_bg_color"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_signUp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SignUp"
+            android:backgroundTint="@color/logo_color"/>
 
 
 

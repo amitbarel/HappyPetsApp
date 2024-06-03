@@ -48,6 +48,8 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
     implementation("com.firebaseui:firebase-ui-auth:8.0.2")
     implementation("com.google.firebase:firebase-firestore")
+    implementation ("com.google.firebase:firebase-storage:20.0.0")
+
 
     //Lottie
     implementation("com.airbnb.android:lottie:5.2.0")
