@@ -3,7 +3,6 @@ package dev.happypets.Activities;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.arch.core.executor.ArchTaskExecutor;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -11,31 +10,36 @@ import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.util.UUID;
 
+import dev.happypets.Database.DataManager;
+import dev.happypets.Objects.AnimalType;
+import dev.happypets.Objects.Pet;
 import dev.happypets.Objects.User;
 import dev.happypets.Objects.Vet;
 import dev.happypets.R;
 
 public class SignUpActivity extends AppCompatActivity {
     //ArchTaskExecutor FirebaseStorage;
+    private ImageButton backBTN;
     private FirebaseAuth mAuth;
     private TextInputEditText et_vet_name, et_vet_email, et_vet_phone, et_vet_address, et_vet_password, et_vet_license;
     private TextInputEditText et_user_name, et_user_email, et_user_password, et_pet_name;
     private Spinner spinner_pet_type;
-    private Button btn_signup, btn_vet_upload_license, btn_upload_pet_photo;
+    private MaterialButton btn_signup, btn_vet_upload_license, btn_upload_pet_photo;
     private RadioGroup rg_user_type;
 
     private Uri imageUri;
@@ -44,13 +48,14 @@ public class SignUpActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_in);
+        setContentView(R.layout.activity_sign_up);
         mAuth = FirebaseAuth.getInstance();
         findViews();
         initViews();
     }
 
     private void findViews() {
+        backBTN = findViewById(R.id.setting_btn_back);
         rg_user_type = findViewById(R.id.rg_user_type);
         et_vet_name = findViewById(R.id.et_vet_name);
         et_vet_email = findViewById(R.id.et_vet_email);
@@ -70,6 +75,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void initViews() {
+        backBTN.setOnClickListener(v -> finish());
         rg_user_type.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == R.id.rb_veterinarian) {
                 findViewById(R.id.layout_veterinarian).setVisibility(View.VISIBLE);
@@ -135,7 +141,10 @@ public class SignUpActivity extends AppCompatActivity {
         mAuth.createUserWithEmailAndPassword(userEmail, userPassword)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        User user = new User(userName, userEmail, userPassword, petName, petType, "");
+                        AnimalType animalType = DataManager.getAnimalTypes().stream()
+                                .filter(obj ->
+                                        obj.getKind().equals(petType)).findFirst().orElse(null);
+                        User user = new User(userName, userEmail, userPassword, new Pet(petName, animalType, null));
                         FirebaseDatabase.getInstance().getReference("Users")
                                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                 .setValue(user).addOnCompleteListener(this::onSignupComplete);

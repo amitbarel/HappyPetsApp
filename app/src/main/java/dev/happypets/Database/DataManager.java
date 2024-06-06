@@ -28,7 +28,7 @@ public class DataManager {
         this.animalTypes = getAnimalTypes();
     }
 
-    public ArrayList<AnimalType> getAnimalTypes() {
+    public static ArrayList<AnimalType> getAnimalTypes() {
         AnimalType cat = new AnimalType("Cat", R.drawable.cat_image);
         AnimalType dog = new AnimalType("Dog", R.drawable.dog_image);
         AnimalType hamster = new AnimalType("Hamster", R.drawable.hamster_image);

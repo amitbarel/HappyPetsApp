@@ -4,10 +4,12 @@ public class Pet {
 
     private String name;
     private AnimalType type;
+    private String photoUrl;
 
-    public Pet(String name, AnimalType type) {
+    public Pet(String name, AnimalType type, String photoUrl) {
         this.name = name;
         this.type = type;
+        this.photoUrl = photoUrl;
     }
 
     public Pet() {
@@ -28,6 +30,15 @@ public class Pet {
 
     public Pet setType(AnimalType type) {
         this.type = type;
+        return this;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public Pet setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
         return this;
     }
 }

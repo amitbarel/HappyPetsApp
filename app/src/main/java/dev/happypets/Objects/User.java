@@ -4,21 +4,17 @@ public class User {
     private String name;
     private String email;
     private String password;
-    private String petName;
-    private String petType;
-    private String petPhotoUrl;
+    private Pet pet;
 
     // Default constructor required for calls to DataSnapshot.getValue(User.class)
     public User() {
     }
 
-    public User(String name, String email, String password, String petName, String petType, String petPhotoUrl) {
+    public User(String name, String email, String password, Pet pet) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.petName = petName;
-        this.petType = petType;
-        this.petPhotoUrl = petPhotoUrl;
+        this.pet = pet;
     }
 
     public String getName() {
@@ -48,30 +44,12 @@ public class User {
         return this;
     }
 
-    public String getPetName() {
-        return petName;
+    public Pet getPet() {
+        return pet;
     }
 
-    public User setPetName(String petName) {
-        this.petName = petName;
-        return this;
-    }
-
-    public String getPetType() {
-        return petType;
-    }
-
-    public User setPetType(String petType) {
-        this.petType = petType;
-        return this;
-    }
-
-    public String getPetPhotoUrl() {
-        return petPhotoUrl;
-    }
-
-    public User setPetPhotoUrl(String petPhotoUrl) {
-        this.petPhotoUrl = petPhotoUrl;
+    public User setPet(Pet pet) {
+        this.pet = pet;
         return this;
     }
 }
