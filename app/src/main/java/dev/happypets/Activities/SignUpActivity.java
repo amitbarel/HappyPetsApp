@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import dev.happypets.Database.DataManager;
@@ -106,12 +107,12 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void signUpVeterinarian() {
-        String vetName = vet_name.getText().toString().trim();
-        String vetEmail = vet_email.getText().toString().trim();
-        String vetPhone = vet_phone.getText().toString().trim();
-        String vetAddress = vet_address.getText().toString().trim();
-        String vetPassword = vet_password.getText().toString().trim();
-        String vetLicense = vet_license.getText().toString().trim();
+        String vetName = Objects.requireNonNull(vet_name.getText()).toString().trim();
+        String vetEmail = Objects.requireNonNull(vet_email.getText()).toString().trim();
+        String vetPhone = Objects.requireNonNull(vet_phone.getText()).toString().trim();
+        String vetAddress = Objects.requireNonNull(vet_address.getText()).toString().trim();
+        String vetPassword = Objects.requireNonNull(vet_password.getText()).toString().trim();
+        String vetLicense = Objects.requireNonNull(vet_license.getText()).toString().trim();
 
         if (validateVeterinarianFields(vetName, vetEmail, vetPhone, vetAddress, vetPassword, vetLicense)) {
 
@@ -131,10 +132,10 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void signUpRegularUser() {
-        String userName = user_name.getText().toString().trim();
-        String userEmail = user_email.getText().toString().trim();
-        String userPassword = user_password.getText().toString().trim();
-        String petName = pet_name.getText().toString().trim();
+        String userName = Objects.requireNonNull(user_name.getText()).toString().trim();
+        String userEmail = Objects.requireNonNull(user_email.getText()).toString().trim();
+        String userPassword = Objects.requireNonNull(user_password.getText()).toString().trim();
+        String petName = Objects.requireNonNull(pet_name.getText()).toString().trim();
         String petType = spinner_pet_type.getSelectedItem().toString();
 
         if (validateUserFields(userName, userEmail, userPassword, petName)) {
@@ -146,7 +147,7 @@ public class SignUpActivity extends AppCompatActivity {
                                     .filter(obj -> obj.getKind().equals(petType)).findFirst().orElse(null);
                             User user = new User(userName, userEmail, userPassword, new Pet(petName, animalType, null));
                             FirebaseDatabase.getInstance().getReference("Users")
-                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                    .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                                     .setValue(user).addOnCompleteListener(this::onSignupComplete);
                         } else {
                             String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error";
@@ -230,11 +231,11 @@ public class SignUpActivity extends AppCompatActivity {
                 user_password.requestFocus();
                 return false;
             }
-             if (petName.isEmpty()) {
-                 pet_name.setError("pet name is required");
-                 pet_name.requestFocus();
-                 return false;
-             }
+//             if (petName.isEmpty()) {
+//                 pet_name.setError("pet name is required");
+//                 pet_name.requestFocus();
+//                 return false;
+//             }
         }
 
         return true;
@@ -266,8 +267,7 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            imageUri = data.getData();
-            // You can now upload the image to Firebase Storage
+            imageUri = data.getData(); // You can now upload the image to Firebase Storage
         }
     }
 

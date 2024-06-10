@@ -44,8 +44,7 @@ public class PetImgAdapter extends RecyclerView.Adapter<PetImgAdapter.PetViewHol
     @Override
     public PetImgAdapter.PetViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.animal_item, parent, false);
-        PetViewHolder pvh = new PetViewHolder(view);
-        return pvh;
+        return new PetViewHolder(view);
     }
 
     @Override

@@ -10,6 +10,8 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Objects;
+
 import dev.happypets.R;
 
 public class LoginActivity extends AppCompatActivity {
@@ -42,8 +44,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void signIn() {
-        String email = txt_email.getText().toString().trim();
-        String password = txt_password.getText().toString().trim();
+        String email = Objects.requireNonNull(txt_email.getText()).toString().trim();
+        String password = Objects.requireNonNull(txt_password.getText()).toString().trim();
 
         if (email.isEmpty() || password.isEmpty()){
             Toast.makeText(this, "Please fill up all needed fields", Toast.LENGTH_LONG).show();

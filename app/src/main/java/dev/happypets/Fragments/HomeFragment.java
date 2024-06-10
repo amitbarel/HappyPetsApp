@@ -21,10 +21,11 @@ public class HomeFragment extends Fragment {
 
     private RecyclerView questionUpdates;
     private GridView animalTypes;
-    private DataManager dataManager;
+//    private DataManager dataManager;
     private ArrayList<AnimalType> kinds;
 
     public HomeFragment() {
+        // Required empty public constructor
     }
 
     @Override
@@ -38,7 +39,7 @@ public class HomeFragment extends Fragment {
     private void findViews(View view) {
         questionUpdates = view.findViewById(R.id.question_updates);
         animalTypes = view.findViewById(R.id.animals_choose);
-        kinds = dataManager.getAnimalTypes();
+        kinds = DataManager.getAnimalTypes();
         PetImgAdapter adapter = new PetImgAdapter(getContext(), kinds);
         GridAdapter gridAdapter = new GridAdapter(getContext(), adapter);
         animalTypes.setAdapter(gridAdapter);

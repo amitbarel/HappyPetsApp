@@ -52,8 +52,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Quseti
     @Override
     public QuestionAdapter.QusetionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.question_item, parent, false);
-        QusetionViewHolder qvh = new QusetionViewHolder(view);
-        return qvh;
+        return new QusetionViewHolder(view);
     }
 
     @Override
