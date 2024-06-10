@@ -50,6 +50,11 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore")
     implementation ("com.google.firebase:firebase-storage:21.0.0")
 
+    implementation ("com.google.firebase:firebase-auth:21.2.0") // Ensure this is the latest version
+    implementation ("com.google.firebase:firebase-database:20.1.0") // Ensure this is the latest version
+    implementation ("com.google.firebase:firebase-storage:20.1.0") // Ensure this is the latest version
+
+
 
     //Lottie
     implementation("com.airbnb.android:lottie:5.2.0")

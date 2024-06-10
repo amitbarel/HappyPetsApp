@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -36,8 +35,8 @@ public class SignUpActivity extends AppCompatActivity {
     //ArchTaskExecutor FirebaseStorage;
     private ImageButton backBTN;
     private FirebaseAuth mAuth;
-    private TextInputEditText et_vet_name, et_vet_email, et_vet_phone, et_vet_address, et_vet_password, et_vet_license;
-    private TextInputEditText et_user_name, et_user_email, et_user_password, et_pet_name;
+    private TextInputEditText vet_name, vet_email, vet_phone, vet_address, vet_password, vet_license;
+    private TextInputEditText user_name, user_email, user_password, pet_name;
     private Spinner spinner_pet_type;
     private MaterialButton btn_signup, btn_vet_upload_license, btn_upload_pet_photo;
     private RadioGroup rg_user_type;
@@ -57,17 +56,17 @@ public class SignUpActivity extends AppCompatActivity {
     private void findViews() {
         backBTN = findViewById(R.id.setting_btn_back);
         rg_user_type = findViewById(R.id.rg_user_type);
-        et_vet_name = findViewById(R.id.et_vet_name);
-        et_vet_email = findViewById(R.id.et_vet_email);
-        et_vet_phone = findViewById(R.id.et_vet_phone);
-        et_vet_address = findViewById(R.id.et_vet_address);
-        et_vet_password = findViewById(R.id.et_vet_password);
-        et_vet_license = findViewById(R.id.et_vet_license);
+        vet_name = findViewById(R.id.et_vet_name);
+        vet_email = findViewById(R.id.et_vet_email);
+        vet_phone = findViewById(R.id.et_vet_phone);
+        vet_address = findViewById(R.id.et_vet_address);
+        vet_password = findViewById(R.id.et_vet_password);
+        vet_license = findViewById(R.id.et_vet_license);
         btn_vet_upload_license = findViewById(R.id.btn_vet_upload_license);
-        et_user_name = findViewById(R.id.et_user_name);
-        et_user_email = findViewById(R.id.et_user_email);
-        et_user_password = findViewById(R.id.et_user_password);
-        et_pet_name = findViewById(R.id.et_pet_name);
+        user_name = findViewById(R.id.et_user_name);
+        user_email = findViewById(R.id.et_user_email);
+        user_password = findViewById(R.id.et_user_password);
+        pet_name = findViewById(R.id.et_pet_name);
         spinner_pet_type = findViewById(R.id.spinner_pet_type);
         btn_upload_pet_photo = findViewById(R.id.btn_upload_pet_photo);
         btn_signup = findViewById(R.id.btn_signup);
@@ -107,85 +106,137 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void signUpVeterinarian() {
-        String vetName = et_vet_name.getText().toString().trim();
-        String vetEmail = et_vet_email.getText().toString().trim();
-        String vetPhone = et_vet_phone.getText().toString().trim();
-        String vetAddress = et_vet_address.getText().toString().trim();
-        String vetPassword = et_vet_password.getText().toString().trim();
-        String vetLicense = et_vet_license.getText().toString().trim();
+        String vetName = vet_name.getText().toString().trim();
+        String vetEmail = vet_email.getText().toString().trim();
+        String vetPhone = vet_phone.getText().toString().trim();
+        String vetAddress = vet_address.getText().toString().trim();
+        String vetPassword = vet_password.getText().toString().trim();
+        String vetLicense = vet_license.getText().toString().trim();
 
-        if (!validateVeterinarianFields(vetName, vetEmail, vetPhone, vetAddress, vetPassword, vetLicense)) return;
+        if (validateVeterinarianFields(vetName, vetEmail, vetPhone, vetAddress, vetPassword, vetLicense)) {
 
-        mAuth.createUserWithEmailAndPassword(vetEmail, vetPassword)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Vet vet = new Vet(vetName, vetEmail, vetPhone, vetAddress, vetPassword, vetLicense, "");
-                        FirebaseDatabase.getInstance().getReference("Veterinarians")
-                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                .setValue(vet).addOnCompleteListener(this::onSignupComplete);
-                    } else {
-                        Toast.makeText(SignUpActivity.this, "Sign up failed. Try again!", Toast.LENGTH_LONG).show();
-                    }
-                });
+            mAuth.createUserWithEmailAndPassword(vetEmail, vetPassword)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Vet vet = new Vet(vetName, vetEmail, vetPhone, vetAddress, vetPassword, vetLicense, "");
+                            FirebaseDatabase.getInstance().getReference("Veterinarians")
+                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                    .setValue(vet).addOnCompleteListener(this::onSignupComplete);
+                        } else {
+                            String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error";
+                            Toast.makeText(SignUpActivity.this, "Sign up failed. " + errorMessage, Toast.LENGTH_LONG).show();
+                        }
+                    });
+        }
     }
 
     private void signUpRegularUser() {
-        String userName = et_user_name.getText().toString().trim();
-        String userEmail = et_user_email.getText().toString().trim();
-        String userPassword = et_user_password.getText().toString().trim();
-        String petName = et_pet_name.getText().toString().trim();
+        String userName = user_name.getText().toString().trim();
+        String userEmail = user_email.getText().toString().trim();
+        String userPassword = user_password.getText().toString().trim();
+        String petName = pet_name.getText().toString().trim();
         String petType = spinner_pet_type.getSelectedItem().toString();
 
-        if (!validateRegularUserFields(userName, userEmail, userPassword, petName)) return;
+        if (validateUserFields(userName, userEmail, userPassword, petName)) {
 
-        mAuth.createUserWithEmailAndPassword(userEmail, userPassword)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        AnimalType animalType = DataManager.getAnimalTypes().stream()
-                                .filter(obj ->
-                                        obj.getKind().equals(petType)).findFirst().orElse(null);
-                        User user = new User(userName, userEmail, userPassword, new Pet(petName, animalType, null));
-                        FirebaseDatabase.getInstance().getReference("Users")
-                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                .setValue(user).addOnCompleteListener(this::onSignupComplete);
-                    } else {
-                        Toast.makeText(SignUpActivity.this, "Sign up failed. Try again!", Toast.LENGTH_LONG).show();
-                    }
-                });
+            mAuth.createUserWithEmailAndPassword(userEmail, userPassword)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            AnimalType animalType = DataManager.getAnimalTypes().stream()
+                                    .filter(obj -> obj.getKind().equals(petType)).findFirst().orElse(null);
+                            User user = new User(userName, userEmail, userPassword, new Pet(petName, animalType, null));
+                            FirebaseDatabase.getInstance().getReference("Users")
+                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                    .setValue(user).addOnCompleteListener(this::onSignupComplete);
+                        } else {
+                            String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error";
+                            Toast.makeText(SignUpActivity.this, "Sign up failed. " + errorMessage, Toast.LENGTH_LONG).show();
+                        }
+                    });
+        }
     }
 
     private boolean validateVeterinarianFields(String vetName, String vetEmail, String vetPhone, String vetAddress, String vetPassword, String vetLicense) {
         if (vetName.isEmpty() || vetEmail.isEmpty() || vetPhone.isEmpty() || vetAddress.isEmpty() || vetPassword.isEmpty() || vetLicense.isEmpty()) {
-            Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show();
-            return false;
+           // Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show();
+            if (vetEmail.isEmpty()) {
+                vet_email.setError("Email is required");
+                vet_email.requestFocus();
+                return false;
+            }
+            if (!Patterns.EMAIL_ADDRESS.matcher(vetEmail).matches()) {
+                vet_email.setError("Invalid email");
+                vet_email.requestFocus();
+                return false;
+            }
+
+            if (vetPassword.isEmpty()) {
+                vet_password.setError("Password is required");
+                vet_password.requestFocus();
+                return false;
+            }
+            if (vetPassword.length() < 6) {
+                vet_password.setError("Minmum password lenght should be 6 characters");
+                vet_password.requestFocus();
+                return false;
+            }
+            if(vetLicense.isEmpty()){
+                vet_license.setError("vet license is required");
+                vet_license.requestFocus();
+                return false;
+            }
+            if(vetName.isEmpty()){
+                vet_name.setError("vet name is required");
+                vet_name.requestFocus();
+                return false;
+            }
+            if(vetAddress.isEmpty()){
+                vet_address.setError("vet address is required");
+                vet_address.requestFocus();
+                return false;
+            }
         }
-        if (!Patterns.EMAIL_ADDRESS.matcher(vetEmail).matches()) {
-            et_vet_email.setError("Invalid email");
-            et_vet_email.requestFocus();
-            return false;
-        }
-        if (vetPassword.length() < 6) {
-            et_vet_password.setError("Password must be at least 6 characters");
-            et_vet_password.requestFocus();
-            return false;
-        }
+
+
         return true;
         }
-    private boolean validateRegularUserFields(String userName, String userEmail, String userPassword, String petName) {
-        if (userName.isEmpty() || userEmail.isEmpty() || userPassword.isEmpty() || petName.isEmpty()) {
-            Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show();
-            return false;
+    private boolean validateUserFields(String userName, String userEmail, String userPassword, String petName) {
+         if (userName.isEmpty() || userEmail.isEmpty() || userPassword.isEmpty() || petName.isEmpty()) {
+           // Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show();
+            if (userName.isEmpty()) {
+                user_name.setError("name user is required");
+                user_name.requestFocus();
+                return false;
+            }
+            if (userEmail.isEmpty()) {
+                vet_email.setError("Email is required");
+                vet_email.requestFocus();
+                return false;
+            }
+
+            if (!Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
+                user_email.setError("Invalid email");
+                user_email.requestFocus();
+                return false;
+            }
+            if (userPassword.isEmpty()) {
+                vet_password.setError("Password is required");
+                vet_password.requestFocus();
+                return false;
+            }
+
+            if (userPassword.length() < 6) {
+                user_password.setError("Password must be at least 6 characters");
+                user_password.requestFocus();
+                return false;
+            }
+             if (petName.isEmpty()) {
+                 pet_name.setError("pet name is required");
+                 pet_name.requestFocus();
+                 return false;
+             }
         }
-        if (!Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
-            et_user_email.setError("Invalid email");
-            et_user_email.requestFocus();
-            return false;
-        }
-        if (userPassword.length() < 6) {
-            et_user_password.setError("Password must be at least 6 characters");
-            et_user_password.requestFocus();
-            return false;
-        }
+
         return true;
     }
 
