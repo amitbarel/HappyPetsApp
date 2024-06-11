@@ -77,4 +77,8 @@ public class Question {
         this.relatedAnswers = relatedAnswers;
         return this;
     }
+
+    public void addAnswer(Answer answer) {
+        this.relatedAnswers.add(answer);
+    }
 }

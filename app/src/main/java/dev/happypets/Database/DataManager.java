@@ -53,17 +53,25 @@ public class DataManager {
     }
 
     public void addNewQuestion(Question question){
-        DatabaseReference ref = firebaseDatabase.getReference("question").child(question.getQuestionId());
-        ref.child("title").setValue(question.getTitle());
-        ref.child("category").setValue(question.getCategory());
-        ref.child("text").setValue(question.getText());
+        DatabaseReference ref = firebaseDatabase.getReference("questions");
+        String questionId = ref.push().getKey();
+        if (questionId != null) {
+            question.setQuestionId(questionId);
+            ref.child(questionId).setValue(question);
+        }else {
+            Log.d("Error", "Question id is null");
+        }
     }
 
-    public void addNewAnswer(Answer answer){
-        DatabaseReference ref = firebaseDatabase.getReference("answer").child(answer.getAnswerId());
-        ref.child("title").setValue(answer.getTitle());
-        ref.child("text").setValue(answer.getText());
-        ref.child("idQuestion").setValue(answer.getRelatedQuestionId());
+    public void addNewAnswer(String questionId, Answer answer){
+        DatabaseReference ref = firebaseDatabase.getReference("questions").child(questionId);
+        String AnswerId = ref.child("answers").push().getKey();
+        if (AnswerId != null) {
+            answer.setAnswerId(ref.child("answers").push().getKey());
+            ref.child("answers").push().setValue(answer);
+        }else{
+            Log.d("Error", "AnswerID is null");
+        }
     }
 
     public ArrayList<Question> getQuestionsByCategory(String category) {

@@ -198,9 +198,10 @@ public class SignUpActivity extends AppCompatActivity {
             }
         }
 
-
         return true;
-        }
+    }
+
+
     private boolean validateUserFields(String userName, String userEmail, String userPassword, String petName) {
          if (userName.isEmpty() || userEmail.isEmpty() || userPassword.isEmpty() || petName.isEmpty()) {
            // Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show();
@@ -231,11 +232,6 @@ public class SignUpActivity extends AppCompatActivity {
                 user_password.requestFocus();
                 return false;
             }
-//             if (petName.isEmpty()) {
-//                 pet_name.setError("pet name is required");
-//                 pet_name.requestFocus();
-//                 return false;
-//             }
         }
 
         return true;
