@@ -27,6 +27,7 @@
             android:layout_alignParentBottom="true"
             android:background="@color/gray_bg"
             android:text="Animal Kind"
+            android:textColor="@color/black"
             android:gravity="center_horizontal"/>
     </RelativeLayout>
 

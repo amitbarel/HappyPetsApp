@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:layout_centerHorizontal="true"
+        android:textColor="@color/black"
         android:text="My Pets"/>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -30,6 +31,7 @@
         android:text="Update Profile"
         android:layout_marginTop="18dp"
         android:layout_centerHorizontal="true"
+        android:backgroundTint="@color/logo_color"
         android:layout_below="@id/my_pets"/>
 
     <com.google.android.material.textview.MaterialTextView
@@ -39,6 +41,7 @@
         android:layout_marginTop="18dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/btn_update"
+        android:textColor="@color/black"
         android:text="My Questions"/>
 
     <androidx.recyclerview.widget.RecyclerView

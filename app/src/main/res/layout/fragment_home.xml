@@ -15,6 +15,7 @@
         android:layout_alignParentStart="true"
         android:text="Hello "
         android:fontFamily="@font/poppins"
+        android:textColor="@color/black"
         android:textSize="25sp"/>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -32,6 +33,7 @@
         android:layout_marginStart="30dp"
         android:layout_marginTop="20dp"
         android:text="All Animals"
+        android:textColor="@color/black"
         android:layout_below="@id/question_updates"/>
 
     <GridView
@@ -51,6 +53,7 @@
         android:layout_marginStart="30dp"
         android:layout_marginTop="20dp"
         android:text="Nearby Vets"
+        android:textColor="@color/black"
         android:layout_below="@id/animals_choose"/>
 
 
