@@ -3,6 +3,7 @@ package dev.happypets.Database;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DatabaseReference;
 
@@ -19,12 +20,14 @@ public class DataManager {
 
     private static DataManager instance;
     private final FirebaseDatabase firebaseDatabase;
+    private DatabaseReference questionsRef;
     private Context context;
     private ArrayList<AnimalType> animalTypes;
     private ArrayList<Question> questions;
 
     public DataManager(Context context) {
         this.firebaseDatabase = FirebaseDatabase.getInstance();
+        this.questionsRef = firebaseDatabase.getReference("questions");
         this.context = context;
         this.questions = new ArrayList<>();
         this.animalTypes = getAnimalTypes();
@@ -71,18 +74,17 @@ public class DataManager {
     }
 
     public void addNewQuestion(Question question){
-        DatabaseReference ref = firebaseDatabase.getReference("questions");
-        String questionId = ref.push().getKey();
+        String questionId = questionsRef.push().getKey();
         if (questionId != null) {
             question.setQuestionId(questionId);
-            ref.child(questionId).setValue(question);
+            questionsRef.child(questionId).setValue(question);
         }else {
             Log.d("Error", "Question id is null");
         }
     }
 
     public void addNewAnswer(String questionId, Answer answer){
-        DatabaseReference ref = firebaseDatabase.getReference("questions").child(questionId);
+        DatabaseReference ref = questionsRef.child(questionId);
         String AnswerId = ref.child("answers").push().getKey();
         if (AnswerId != null) {
             answer.setAnswerId(ref.child("answers").push().getKey());
@@ -92,13 +94,19 @@ public class DataManager {
         }
     }
 
-    public ArrayList<Question> getQuestionsByCategory(String category) {
+    public ArrayList<Question> getQuestionsByCategory(String category, final OnQuestionsRetrievedListener listener) {
         ArrayList<Question> relatedQuestions = new ArrayList<>();
-        for (Question question : questions) {
-            if (question.getCategory().equals(category)) {
+        questionsRef.orderByChild("category").equalTo(category).get().addOnSuccessListener(dataSnapshot -> {
+            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                Question question = snapshot.getValue(Question.class);
                 relatedQuestions.add(question);
             }
-        }
+            listener.onQuestionsRetrieved(questions);
+        });
         return relatedQuestions;
+    }
+
+    public interface OnQuestionsRetrievedListener {
+        void onQuestionsRetrieved(ArrayList<Question> questions);
     }
 }
