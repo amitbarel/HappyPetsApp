@@ -12,6 +12,7 @@ public class Question {
     private ArrayList<Answer> relatedAnswers;
     private String askedTime;
     private boolean isFavorite = false;
+    private User askedBy;
 
     public Question() {
     }

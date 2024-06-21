@@ -6,6 +6,7 @@ public class Answer {
     private String answerId;
     private String title;
     private String text;
+    private String answeredByID;
 
     public Answer() {
     }

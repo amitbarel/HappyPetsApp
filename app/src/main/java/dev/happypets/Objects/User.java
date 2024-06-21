@@ -1,10 +1,12 @@
 package dev.happypets.Objects;
 
+import java.util.ArrayList;
+
 public class User {
     private String name;
     private String email;
     private String password;
-    private Pet pet;
+    private ArrayList<Pet> pets;
 
     // Default constructor required for calls to DataSnapshot.getValue(User.class)
     public User() {
@@ -14,7 +16,7 @@ public class User {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.pet = pet;
+        this.pets.add(pet);
     }
 
     public String getName() {
@@ -44,12 +46,16 @@ public class User {
         return this;
     }
 
-    public Pet getPet() {
-        return pet;
+    public ArrayList<Pet> getPet() {
+        return pets;
     }
 
-    public User setPet(Pet pet) {
-        this.pet = pet;
+    public void addPet(Pet pet) {
+        this.pets.add(pet);
+    }
+
+    public User setPets(ArrayList<Pet> pets) {
+        this.pets = pets;
         return this;
     }
 }
