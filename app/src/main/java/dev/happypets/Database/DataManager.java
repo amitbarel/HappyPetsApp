@@ -20,10 +20,11 @@ public class DataManager {
 
     private static DataManager instance;
     private final FirebaseDatabase firebaseDatabase;
+    private ArrayList<Question> questions;
+
     private DatabaseReference questionsRef;
     private Context context;
     private ArrayList<AnimalType> animalTypes;
-    private ArrayList<Question> questions;
 
     public DataManager(Context context) {
         this.firebaseDatabase = FirebaseDatabase.getInstance();
@@ -62,15 +63,11 @@ public class DataManager {
     }
 
     public ArrayList<Question> getQuestions() {
-        if (!questions.isEmpty()){
-            return questions;
-        }
-        return new ArrayList<>();
+        return questions;
     }
 
-    public DataManager setQuestions(ArrayList<Question> questions) {
+    public void setQuestions(ArrayList<Question> questions) {
         this.questions = questions;
-        return this;
     }
 
     public void addNewQuestion(Question question){

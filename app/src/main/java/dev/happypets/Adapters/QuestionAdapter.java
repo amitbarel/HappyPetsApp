@@ -59,7 +59,11 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Quseti
     public void onBindViewHolder(@NonNull QuestionAdapter.QusetionViewHolder holder, int position) {
         Question question = questions.get(position);
         holder.title.setText(question.getTitle());
-        holder.numberOfAnswers.setText(question.getRelatedAnswers().size());
+        if (question.getRelatedAnswers() == null){
+            holder.numberOfAnswers.setText("0");
+        }else{
+            holder.numberOfAnswers.setText(question.getRelatedAnswers().size() + "");
+        }
         holder.questionTime.setText(question.getAskedTime());
         if (question.isFavorite()){
             holder.favorite.setImageResource(R.drawable.fill_heart);

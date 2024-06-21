@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        dataManager = DataManager.getInstance(getApplicationContext());
+
         readFromDatabase();
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
@@ -68,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         final ArrayList<Answer> answers = new ArrayList<>();
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("question");
+        DatabaseReference ref = database.getReference("questions");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

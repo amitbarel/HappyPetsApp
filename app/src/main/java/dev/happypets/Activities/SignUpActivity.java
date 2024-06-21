@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.ImageButton;
@@ -36,6 +37,7 @@ public class SignUpActivity extends AppCompatActivity {
     //ArchTaskExecutor FirebaseStorage;
     private ImageButton backBTN;
     private FirebaseAuth mAuth;
+    private FirebaseDatabase mDatabase;
     private TextInputEditText vet_name, vet_email, vet_phone, vet_address, vet_password, vet_license;
     private TextInputEditText user_name, user_email, user_password, pet_name;
     private Spinner spinner_pet_type;
@@ -75,6 +77,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void initViews() {
+        mDatabase = FirebaseDatabase.getInstance();
         backBTN.setOnClickListener(v -> finish());
         rg_user_type.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == R.id.rb_veterinarian) {
@@ -115,16 +118,24 @@ public class SignUpActivity extends AppCompatActivity {
         String vetLicense = Objects.requireNonNull(vet_license.getText()).toString().trim();
 
         if (validateVeterinarianFields(vetName, vetEmail, vetPhone, vetAddress, vetPassword, vetLicense)) {
-
             mAuth.createUserWithEmailAndPassword(vetEmail, vetPassword)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             Vet vet = new Vet(vetName, vetEmail, vetPhone, vetAddress, vetPassword, vetLicense, "");
-                            FirebaseDatabase.getInstance().getReference("Veterinarians")
+                            mDatabase.getReference("Veterinarians")
                                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                    .setValue(vet).addOnCompleteListener(this::onSignupComplete);
+                                    .setValue(vet).addOnCompleteListener(dbTask -> {
+                                        if (dbTask.isSuccessful()) {
+                                            onSignupComplete(dbTask);
+                                        } else {
+                                            String errorMessage = dbTask.getException() != null ? dbTask.getException().getMessage() : "Unknown error";
+                                            Log.e("SignUpActivity", "Database write failed: " + errorMessage);
+                                            Toast.makeText(SignUpActivity.this, "Database write failed. " + errorMessage, Toast.LENGTH_LONG).show();
+                                        }
+                                    });
                         } else {
                             String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error";
+                            Log.e("SignUpActivity", "Sign up failed: " + errorMessage);
                             Toast.makeText(SignUpActivity.this, "Sign up failed. " + errorMessage, Toast.LENGTH_LONG).show();
                         }
                     });
@@ -146,7 +157,7 @@ public class SignUpActivity extends AppCompatActivity {
                             AnimalType animalType = DataManager.getAnimalTypes().stream()
                                     .filter(obj -> obj.getKind().equals(petType)).findFirst().orElse(null);
                             User user = new User(userName, userEmail, userPassword, new Pet(petName, animalType, null));
-                            FirebaseDatabase.getInstance().getReference("Users")
+                            mDatabase.getReference("Users")
                                     .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                                     .setValue(user).addOnCompleteListener(this::onSignupComplete);
                         } else {
