@@ -8,7 +8,7 @@
     android:background="@color/app_bg_color"
     tools:context=".Activities.NewQuestionActivity">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/img_back_from_question"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/question_body"
             android:layout_width="match_parent"
             android:layout_height="180dp"

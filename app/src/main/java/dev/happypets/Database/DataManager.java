@@ -8,6 +8,7 @@ import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import dev.happypets.Objects.AnimalType;
 import dev.happypets.Objects.Answer;
@@ -16,6 +17,7 @@ import dev.happypets.R;
 
 public class DataManager {
 
+    private static DataManager instance;
     private final FirebaseDatabase firebaseDatabase;
     private Context context;
     private ArrayList<AnimalType> animalTypes;
@@ -28,6 +30,13 @@ public class DataManager {
         this.animalTypes = getAnimalTypes();
     }
 
+    public static synchronized DataManager getInstance(Context context) {
+        if (instance == null) {
+            instance = new DataManager(context.getApplicationContext());
+        }
+        return instance;
+    }
+
     public static ArrayList<AnimalType> getAnimalTypes() {
         AnimalType cat = new AnimalType("Cat", R.drawable.cat_image);
         AnimalType dog = new AnimalType("Dog", R.drawable.dog_image);
@@ -38,13 +47,22 @@ public class DataManager {
         return new ArrayList<>(Arrays.asList(cat, dog, hamster, parrot, rabbit, fish));
     }
 
+    public ArrayList<String> getAnimalNames() {
+        return (ArrayList<String>) animalTypes.stream()
+                .map(AnimalType::getKind)
+                .collect(Collectors.toList());
+    }
+
     public DataManager setAnimalTypes(ArrayList<AnimalType> animalTypes) {
         this.animalTypes = animalTypes;
         return this;
     }
 
     public ArrayList<Question> getQuestions() {
-        return questions;
+        if (!questions.isEmpty()){
+            return questions;
+        }
+        return new ArrayList<>();
     }
 
     public DataManager setQuestions(ArrayList<Question> questions) {

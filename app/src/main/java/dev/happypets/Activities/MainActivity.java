@@ -47,22 +47,19 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportFragmentManager().beginTransaction().replace(R.id.navigation_container,homeFragment).commit();
 
-        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int itemId = item.getItemId();
-                if (itemId == R.id.home) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.navigation_container, homeFragment).commit();
-                    return true;
-                } else if (itemId == R.id.qa) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.navigation_container, qaFragment).commit();
-                    return true;
-                } else if (itemId == R.id.profile) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.navigation_container, profileFragment).commit();
-                    return true;
-                }
-                return false;
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.home) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.navigation_container, homeFragment).commit();
+                return true;
+            } else if (itemId == R.id.qa) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.navigation_container, qaFragment).commit();
+                return true;
+            } else if (itemId == R.id.profile) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.navigation_container, profileFragment).commit();
+                return true;
             }
+            return false;
         });
     }
 

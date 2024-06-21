@@ -15,6 +15,7 @@ import android.widget.EditText;
 import com.google.android.material.button.MaterialButton;
 
 import dev.happypets.Activities.NewAnswerActivity;
+import dev.happypets.Activities.NewQuestionActivity;
 import dev.happypets.Adapters.QuestionAdapter;
 import dev.happypets.CallBacks.QuestionCallBack;
 import dev.happypets.Database.DataManager;
@@ -29,6 +30,9 @@ public class QuestionsAnswersFragment extends Fragment {
     QuestionAdapter questionAdapter;
     DataManager dataManager;
 
+    public QuestionsAnswersFragment() {
+        // Required empty public constructor
+    }
 
     QuestionCallBack questionCallBack = new QuestionCallBack() {
         @Override
@@ -47,8 +51,20 @@ public class QuestionsAnswersFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_questions_answers, container, false);
+        dataManager = DataManager.getInstance(getContext());
         findViews(view);
+        initViews();
         return view;
+    }
+
+    private void initViews() {
+        recyclerQuestions.setLayoutManager(new LinearLayoutManager(getContext()));
+        questionAdapter = new QuestionAdapter(getContext(), dataManager.getQuestions(), questionCallBack);
+        recyclerQuestions.setAdapter(questionAdapter);
+        newQuestion.setOnClickListener(v->{
+            Intent intent = new Intent(getActivity(), NewQuestionActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void findViews(View view) {
@@ -56,8 +72,5 @@ public class QuestionsAnswersFragment extends Fragment {
         newQuestion = view.findViewById(R.id.btn_new_question);
         searchSpecific = view.findViewById(R.id.et_specific);
         recyclerQuestions = view.findViewById(R.id.recycle_questions);
-        recyclerQuestions.setLayoutManager(new LinearLayoutManager(getContext()));
-        questionAdapter = new QuestionAdapter(getContext(), dataManager.getQuestions(), questionCallBack);
-        recyclerQuestions.setAdapter(questionAdapter);
     }
 }
