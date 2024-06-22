@@ -1,6 +1,7 @@
 package dev.happypets.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,15 +14,16 @@ import com.google.android.material.textview.MaterialTextView;
 
 import java.util.ArrayList;
 
+import dev.happypets.Activities.NewAnswerActivity;
 import dev.happypets.Objects.Question;
 import dev.happypets.CallBacks.QuestionCallBack;
 import dev.happypets.R;
 
 public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.QusetionViewHolder> {
 
-    private Context context;
+    private final Context context;
+    private final QuestionCallBack questionCallBack;
     private ArrayList<Question> questions;
-    private QuestionCallBack questionCallBack;
 
     public QuestionAdapter(Context context, ArrayList<Question> questions, QuestionCallBack questionCallBack) {
         this.context = context;
@@ -30,7 +32,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Quseti
     }
 
     public class QusetionViewHolder extends RecyclerView.ViewHolder {
-        private MaterialTextView title;
+        private final MaterialTextView title;
         private MaterialTextView numberOfAnswers;
         private MaterialTextView questionTime;
         private AppCompatImageView favorite;
@@ -43,7 +45,18 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Quseti
             questionTime = itemView.findViewById(R.id.txt_question_time);
             favorite = itemView.findViewById(R.id.question_IMG_favorite);
             favorite.setOnClickListener(v->{
-                questionCallBack.favoriteClicked(questions.get(getAdapterPosition()),getAdapterPosition());
+                int position = getAdapterPosition();
+                Question question = questions.get(position);
+                question.setFavorite(!question.isFavorite());
+                notifyItemChanged(position);
+                questionCallBack.favoriteClicked(question, position);
+            });
+            itemView.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                Question question = questions.get(position);
+                Intent intent = new Intent(context, NewAnswerActivity.class);
+                intent.putExtra("question_id", question.getQuestionId());
+                context.startActivity(intent);
             });
         }
     }
@@ -61,15 +74,11 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Quseti
         holder.title.setText(question.getTitle());
         if (question.getRelatedAnswers() == null){
             holder.numberOfAnswers.setText("0");
-        }else{
-            holder.numberOfAnswers.setText(question.getRelatedAnswers().size() + "");
+        } else{
+            holder.numberOfAnswers.setText(String.valueOf(question.getRelatedAnswers().size()));
         }
         holder.questionTime.setText(question.getAskedTime());
-        if (question.isFavorite()){
-            holder.favorite.setImageResource(R.drawable.fill_heart);
-        }else {
-            holder.favorite.setImageResource(R.drawable.heart_thin);
-        }
+        holder.favorite.setImageResource(question.isFavorite() ? R.drawable.fill_heart : R.drawable.heart_thin);
     }
 
     @Override

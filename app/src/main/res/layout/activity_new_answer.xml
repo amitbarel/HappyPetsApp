@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_bg_color"
     tools:context=".Activities.NewAnswerActivity">
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/img_back_from_answer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -62,7 +61,7 @@
         tools:listitem="@layout/answer_item"
         android:layout_below="@id/chosen_question"/>
 
-    <EditText
+    <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/et_answer"
         android:layout_width="match_parent"
         android:layout_height="150dp"

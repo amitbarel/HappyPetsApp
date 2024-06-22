@@ -11,7 +11,7 @@ public class Question {
     private String text;
     private ArrayList<Answer> relatedAnswers;
     private String askedTime;
-    private boolean isFavorite = false;
+    private boolean isFavorite;
     private User askedBy;
 
     public Question() {
@@ -24,6 +24,25 @@ public class Question {
         this.text = text;
         this.relatedAnswers = new ArrayList<>();
         this.askedTime = LocalTime.now().toString();
+        isFavorite = false;
+    }
+
+    public User getAskedBy() {
+        return askedBy;
+    }
+
+    public Question setAskedBy(User askedBy) {
+        this.askedBy = askedBy;
+        return this;
+    }
+
+    public boolean getFavorite() {
+        return isFavorite;
+    }
+
+    public Question setFavorite(boolean isFavorite) {
+        this.isFavorite = isFavorite;
+        return this;
     }
 
     public Question setQuestionId(String id){

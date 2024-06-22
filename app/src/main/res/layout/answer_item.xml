@@ -15,24 +15,15 @@
         android:background="@color/gray_bg">
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/txt_answer_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:layout_alignParentEnd="true"
-            android:text="Time"
-            android:textSize="12sp" />
-
-        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/txt_answer_body"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="4dp"
-            android:layout_marginEnd="60dp"
+            android:layout_marginEnd="30dp"
             android:layout_marginBottom="8dp"
             android:layout_marginStart="8dp"
             android:padding="4dp"
-            android:maxLines="2"
+            android:maxLines="3"
             android:text="Answer"
             android:textSize="16sp" />
 
