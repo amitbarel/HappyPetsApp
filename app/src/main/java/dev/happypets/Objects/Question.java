@@ -2,7 +2,6 @@ package dev.happypets.Objects;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class Question {
     private String questionId;
@@ -11,7 +10,7 @@ public class Question {
     private String text;
     private ArrayList<Answer> relatedAnswers;
     private String askedTime;
-    private boolean isFavorite;
+    private boolean favorite;
     private User askedBy;
 
     public Question() {
@@ -24,7 +23,7 @@ public class Question {
         this.text = text;
         this.relatedAnswers = new ArrayList<>();
         this.askedTime = LocalTime.now().toString();
-        isFavorite = false;
+        favorite = false;
     }
 
     public User getAskedBy() {
@@ -36,13 +35,13 @@ public class Question {
         return this;
     }
 
-    public boolean getFavorite() {
-        return isFavorite;
+    public boolean isFavorite() {
+        return favorite;
     }
 
-    public Question setFavorite(boolean isFavorite) {
-        this.isFavorite = isFavorite;
-        return this;
+
+    public void setFavorite(boolean fav) {
+        this.favorite = fav;
     }
 
     public Question setQuestionId(String id){
@@ -67,9 +66,6 @@ public class Question {
         return askedTime;
     }
 
-    public boolean isFavorite() {
-        return isFavorite;
-    }
 
     public String getTitle() {
         return title;
@@ -99,6 +95,8 @@ public class Question {
     }
 
     public void addAnswer(Answer answer) {
-        this.relatedAnswers.add(answer);
+        if (answer != null){
+            this.relatedAnswers.add(answer);
+        }
     }
 }

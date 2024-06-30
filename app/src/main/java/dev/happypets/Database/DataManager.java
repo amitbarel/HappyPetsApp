@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import dev.happypets.CallBacks.AnswerCallback;
 import dev.happypets.Objects.AnimalType;
 import dev.happypets.Objects.Answer;
 import dev.happypets.Objects.Question;
@@ -22,14 +23,12 @@ public class DataManager {
     private final FirebaseDatabase firebaseDatabase;
     private ArrayList<Question> questions;
 
-    private DatabaseReference questionsRef;
-    private Context context;
+    private final DatabaseReference questionsRef;
     private ArrayList<AnimalType> animalTypes;
 
     public DataManager(Context context) {
         this.firebaseDatabase = FirebaseDatabase.getInstance();
         this.questionsRef = firebaseDatabase.getReference("questions");
-        this.context = context;
         this.questions = new ArrayList<>();
         this.animalTypes = getAnimalTypes();
     }
@@ -86,9 +85,23 @@ public class DataManager {
         if (AnswerId != null) {
             answer.setAnswerId(ref.child("answers").push().getKey());
             ref.child("answers").push().setValue(answer);
+            addToRelatedQuestions(questionId, answer);
         }else{
             Log.d("Error", "AnswerID is null");
         }
+    }
+
+    public void getQuestionById(String id, final OnQuestionRetrievedListener listener) {
+        DatabaseReference ref = questionsRef.child(id);
+        ref.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DataSnapshot dataSnapshot = task.getResult();
+                Question question = dataSnapshot.getValue(Question.class);
+                listener.onQuestionRetrieved(question);
+            } else {
+                listener.onError(task.getException());
+            }
+        });
     }
 
     public ArrayList<Question> getQuestionsByCategory(String category, final OnQuestionsRetrievedListener listener) {
@@ -103,7 +116,30 @@ public class DataManager {
         return relatedQuestions;
     }
 
+    public void getAnswersByQuestionId(String questionId, AnswerCallback callback) {
+        questionsRef.child(questionId).child("answers").get().addOnSuccessListener(dataSnapshot -> {
+            ArrayList<Answer> answers = new ArrayList<>();
+            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                Answer answer = snapshot.getValue(Answer.class);
+                if (answer != null) {
+                    answers.add(answer);
+                }
+            }
+            callback.onCallback(answers);
+        });
+    }
+
+
+    public void addToRelatedQuestions(String questionId, Answer answer) {
+        questions.stream().filter(q -> q.getQuestionId().equals(questionId)).findFirst().ifPresent(question -> question.addAnswer(answer));
+    }
+
     public interface OnQuestionsRetrievedListener {
         void onQuestionsRetrieved(ArrayList<Question> questions);
+    }
+
+    public interface OnQuestionRetrievedListener {
+        void onQuestionRetrieved(Question question);
+        void onError(Exception e);
     }
 }

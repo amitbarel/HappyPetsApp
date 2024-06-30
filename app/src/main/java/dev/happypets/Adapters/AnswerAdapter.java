@@ -15,6 +15,7 @@ import com.google.android.material.textview.MaterialTextView;
 import java.util.ArrayList;
 
 import dev.happypets.Activities.NewAnswerActivity;
+import dev.happypets.CallBacks.AnswerCallback;
 import dev.happypets.CallBacks.QuestionCallBack;
 import dev.happypets.Objects.Answer;
 import dev.happypets.Objects.Question;
@@ -23,14 +24,16 @@ import dev.happypets.R;
 public class AnswerAdapter extends RecyclerView.Adapter<AnswerAdapter.AnswerViewHolder> {
 
     private Context context;
+    private AnswerCallback answerCallback;
     private ArrayList<Answer> answers;
 
-    public AnswerAdapter(Context context, ArrayList<Answer> answers) {
+    public AnswerAdapter(Context context, ArrayList<Answer> answers, AnswerCallback answerCallback) {
         this.context = context;
         this.answers = answers;
+        this.answerCallback = answerCallback;
     }
 
-    public class AnswerViewHolder extends RecyclerView.ViewHolder {
+    public static class AnswerViewHolder extends RecyclerView.ViewHolder {
         private MaterialTextView answerBody;
 
 

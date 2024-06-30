@@ -15,7 +15,10 @@ import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textview.MaterialTextView;
 
+import java.util.Objects;
+
 import dev.happypets.Adapters.AnswerAdapter;
+import dev.happypets.CallBacks.AnswerCallback;
 import dev.happypets.Database.DataManager;
 import dev.happypets.Objects.Answer;
 import dev.happypets.Objects.Question;
@@ -30,12 +33,15 @@ public class NewAnswerActivity extends AppCompatActivity {
     RecyclerView relatedAnswers;
     TextInputEditText answer;
     MaterialButton btnRespond;
+    AnswerCallback answerCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_answer);
+
         dataManager = DataManager.getInstance(this);
+
         findViews();
         initViews();
     }
@@ -52,22 +58,48 @@ public class NewAnswerActivity extends AppCompatActivity {
 
     private void initViews() {
         Intent intent = getIntent();
-        String chosenQuestionId = intent.getStringExtra("questionId");
-        Question chosen = dataManager.getQuestions().get(Integer.parseInt(chosenQuestionId));
-        title.setText(chosen.getTitle());
-        body.setText(chosen.getText());
-        relatedAnswers.setAdapter(new AnswerAdapter(this, chosen.getRelatedAnswers()));
-        backButton.setOnClickListener(v->{
-            Toast.makeText(this, "No answer was added", Toast.LENGTH_SHORT).show();
+        String chosenQuestionId = intent.getStringExtra("question_id");
+        if (chosenQuestionId == null) {
+            Toast.makeText(this, "No question ID provided", Toast.LENGTH_SHORT).show();
             finish();
+            return;
+        }
+
+        dataManager.getQuestionById(chosenQuestionId, new DataManager.OnQuestionRetrievedListener() {
+            @Override
+            public void onQuestionRetrieved(Question question) {
+                if (question != null) {
+                    title.setText(question.getTitle());
+                    body.setText(question.getText());
+
+                    dataManager.getAnswersByQuestionId(chosenQuestionId, answers -> {
+                        relatedAnswers.setAdapter(new AnswerAdapter(NewAnswerActivity.this, answers, answerCallback));
+                    });
+
+                    backButton.setOnClickListener(v -> {
+                        Toast.makeText(NewAnswerActivity.this, "No answer was added", Toast.LENGTH_SHORT).show();
+                        finish();
+                    });
+
+                    btnRespond.setOnClickListener(v -> {
+                        Answer newAnswer = new Answer()
+                                .setText(Objects.requireNonNull(answer.getText()).toString());
+                        dataManager.addNewAnswer(chosenQuestionId, newAnswer);
+                        Toast.makeText(NewAnswerActivity.this, "Answer was added", Toast.LENGTH_SHORT).show();
+                        finish();
+                    });
+                } else {
+                    Toast.makeText(NewAnswerActivity.this, "Question not found", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(NewAnswerActivity.this, "Error fetching question: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         });
-        btnRespond.setOnClickListener(v->{
-            Answer newAnswer = new Answer()
-                    .setTitle(title.getText().toString())
-                    .setText(body.getText().toString());
-            dataManager.addNewAnswer(chosenQuestionId, newAnswer);
-            Toast.makeText(this, "Answer was added", Toast.LENGTH_SHORT).show();
-            finish();
-        });
+
+
     }
 }

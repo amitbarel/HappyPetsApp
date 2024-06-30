@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -44,6 +45,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Quseti
             numberOfAnswers = itemView.findViewById(R.id.txt_numberOfAnswers);
             questionTime = itemView.findViewById(R.id.txt_question_time);
             favorite = itemView.findViewById(R.id.question_IMG_favorite);
+
             favorite.setOnClickListener(v->{
                 int position = getAdapterPosition();
                 Question question = questions.get(position);
@@ -51,12 +53,17 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Quseti
                 notifyItemChanged(position);
                 questionCallBack.favoriteClicked(question, position);
             });
+
             itemView.setOnClickListener(v -> {
                 int position = getAdapterPosition();
                 Question question = questions.get(position);
-                Intent intent = new Intent(context, NewAnswerActivity.class);
-                intent.putExtra("question_id", question.getQuestionId());
-                context.startActivity(intent);
+                if (question.getQuestionId() != null) {
+                    Intent intent = new Intent(context, NewAnswerActivity.class);
+                    intent.putExtra("question_id", question.getQuestionId());
+                    context.startActivity(intent);
+                } else {
+                    Toast.makeText(context, "Question ID is null", Toast.LENGTH_SHORT).show();
+                }
             });
         }
     }

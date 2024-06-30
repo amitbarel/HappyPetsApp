@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 
@@ -42,8 +43,7 @@ public class QuestionsAnswersFragment extends Fragment {
 
         @Override
         public void onClicked(Question question, int position) {
-            Intent intent = new Intent(getActivity(), NewAnswerActivity.class);
-            startActivity(intent);
+            //The adapter handles it
         }
     };
 
