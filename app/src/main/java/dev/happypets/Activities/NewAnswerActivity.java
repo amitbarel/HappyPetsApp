@@ -28,7 +28,7 @@ public class NewAnswerActivity extends AppCompatActivity {
 
     DataManager dataManager;
     ShapeableImageView backButton;
-    MaterialTextView title, body;
+    MaterialTextView title, body, askedBy;
     AppCompatImageView kind_image;
     RecyclerView relatedAnswers;
     TextInputEditText answer;
@@ -50,6 +50,7 @@ public class NewAnswerActivity extends AppCompatActivity {
         backButton = findViewById(R.id.img_back_from_answer);
         title = findViewById(R.id.actual_title);
         body = findViewById(R.id.actual_body);
+        askedBy = findViewById(R.id.tv_username);
         kind_image = findViewById(R.id.img_kind);
         relatedAnswers = findViewById(R.id.recycle_answers);
         answer = findViewById(R.id.et_answer);
@@ -71,6 +72,7 @@ public class NewAnswerActivity extends AppCompatActivity {
                 if (question != null) {
                     title.setText(question.getTitle());
                     body.setText(question.getText());
+                    askedBy.setText(question.getAskedBy().getName());
 
                     dataManager.getAnswersByQuestionId(chosenQuestionId, answers -> {
                         relatedAnswers.setAdapter(new AnswerAdapter(NewAnswerActivity.this, answers, answerCallback));
