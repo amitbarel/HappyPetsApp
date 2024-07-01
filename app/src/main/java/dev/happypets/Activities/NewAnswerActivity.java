@@ -1,13 +1,12 @@
 package dev.happypets.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.EditText;
-import android.widget.ImageView;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
@@ -18,22 +17,20 @@ import com.google.android.material.textview.MaterialTextView;
 import java.util.Objects;
 
 import dev.happypets.Adapters.AnswerAdapter;
-import dev.happypets.CallBacks.AnswerCallback;
 import dev.happypets.Database.DataManager;
 import dev.happypets.Objects.Answer;
 import dev.happypets.Objects.Question;
+import dev.happypets.Objects.User;
 import dev.happypets.R;
 
 public class NewAnswerActivity extends AppCompatActivity {
 
-    DataManager dataManager;
-    ShapeableImageView backButton;
-    MaterialTextView title, body, askedBy;
-    AppCompatImageView kind_image;
-    RecyclerView relatedAnswers;
-    TextInputEditText answer;
-    MaterialButton btnRespond;
-    AnswerCallback answerCallback;
+    private DataManager dataManager;
+    private MaterialTextView title, body, askedBy;
+    private RecyclerView relatedAnswers;
+    private TextInputEditText answer;
+    private MaterialButton btnRespond;
+    private ShapeableImageView back_arrow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,17 +44,22 @@ public class NewAnswerActivity extends AppCompatActivity {
     }
 
     private void findViews() {
-        backButton = findViewById(R.id.img_back_from_answer);
         title = findViewById(R.id.actual_title);
         body = findViewById(R.id.actual_body);
         askedBy = findViewById(R.id.tv_username);
-        kind_image = findViewById(R.id.img_kind);
         relatedAnswers = findViewById(R.id.recycle_answers);
         answer = findViewById(R.id.et_answer);
         btnRespond = findViewById(R.id.btn_respond);
+        back_arrow= findViewById(R.id.img_back_from_answer);
     }
 
     private void initViews() {
+        findViewById(R.id.img_back_from_answer).setOnClickListener(v -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        });
+
         Intent intent = getIntent();
         String chosenQuestionId = intent.getStringExtra("question_id");
         if (chosenQuestionId == null) {
@@ -66,30 +68,40 @@ public class NewAnswerActivity extends AppCompatActivity {
             return;
         }
 
+
         dataManager.getQuestionById(chosenQuestionId, new DataManager.OnQuestionRetrievedListener() {
             @Override
             public void onQuestionRetrieved(Question question) {
                 if (question != null) {
                     title.setText(question.getTitle());
                     body.setText(question.getText());
-                    askedBy.setText(question.getAskedBy().getName());
 
+                    // Display askedBy user's name
+                    User askedByUser = question.getAskedBy();
+                    if (askedByUser != null && askedByUser.getName() != null) {
+                        askedBy.setText(askedByUser.getName());
+                    } else {
+                        askedBy.setText("Unknown");
+                    }
+
+                    // Fetch related answers
                     dataManager.getAnswersByQuestionId(chosenQuestionId, answers -> {
-                        relatedAnswers.setAdapter(new AnswerAdapter(NewAnswerActivity.this, answers, answerCallback));
+                        relatedAnswers.setAdapter(new AnswerAdapter(NewAnswerActivity.this, answers));
                     });
 
-                    backButton.setOnClickListener(v -> {
-                        Toast.makeText(NewAnswerActivity.this, "No answer was added", Toast.LENGTH_SHORT).show();
-                        finish();
-                    });
-
+                    // Button actions
                     btnRespond.setOnClickListener(v -> {
-                        Answer newAnswer = new Answer()
-                                .setText(Objects.requireNonNull(answer.getText()).toString());
-                        dataManager.addNewAnswer(chosenQuestionId, newAnswer);
-                        Toast.makeText(NewAnswerActivity.this, "Answer was added", Toast.LENGTH_SHORT).show();
-                        finish();
+                        String newAnswerText = Objects.requireNonNull(answer.getText()).toString();
+                        if (!newAnswerText.isEmpty()) {
+                            Answer newAnswer = new Answer().setText(newAnswerText);
+                            dataManager.addNewAnswer(chosenQuestionId, newAnswer);
+                            Toast.makeText(NewAnswerActivity.this, "Answer added successfully", Toast.LENGTH_SHORT).show();
+                            finish();
+                        } else {
+                            Toast.makeText(NewAnswerActivity.this, "Please enter an answer", Toast.LENGTH_SHORT).show();
+                        }
                     });
+
                 } else {
                     Toast.makeText(NewAnswerActivity.this, "Question not found", Toast.LENGTH_SHORT).show();
                     finish();
@@ -99,9 +111,14 @@ public class NewAnswerActivity extends AppCompatActivity {
             @Override
             public void onError(Exception e) {
                 Toast.makeText(NewAnswerActivity.this, "Error fetching question: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
 
 
     }
+
+
+
+
 }

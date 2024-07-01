@@ -51,12 +51,36 @@
             android:background="@color/white"
             android:hint="Body"/>
 
+
         <Spinner
             android:id="@+id/spinner_animal"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_gravity="end"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:orientation="horizontal">
+
+
+            <View
+                android:layout_width="7dp"
+                android:layout_height="match_parent"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Asked by:"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/Q_username"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="15dp"
+                android:text="username" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

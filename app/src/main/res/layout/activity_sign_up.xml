@@ -22,14 +22,14 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true" />
 
-    <!-- The logo and main content -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center_horizontal">
 
-        <!-- Logo at the top center -->
+
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/logo_image"
             android:layout_width="200dp"
@@ -38,7 +38,7 @@
             android:layout_marginTop="20dp"
             android:src="@drawable/ic_logo" />
 
-        <!-- Main content centered below the logo -->
+
         <LinearLayout
             android:id="@+id/ll_main"
             android:layout_width="200dp"
@@ -67,7 +67,7 @@
                     android:text="Regular User" />
             </RadioGroup>
 
-            <!-- Vet Fields -->
+
             <LinearLayout
                 android:id="@+id/layout_veterinarian"
                 android:layout_width="match_parent"
@@ -158,7 +158,7 @@
                     android:text="Upload Business License" />
             </LinearLayout>
 
-            <!-- Regular User Fields -->
+
             <LinearLayout
                 android:id="@+id/layout_regular_user"
                 android:layout_width="match_parent"
