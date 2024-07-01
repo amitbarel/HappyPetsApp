@@ -9,12 +9,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textview.MaterialTextView;
-
+;
 import java.util.ArrayList;
+import java.util.List;
 
 import dev.happypets.CallBacks.AnswerCallback;
 import dev.happypets.Objects.Answer;
 import dev.happypets.R;
+
 
 public class AnswerAdapter extends RecyclerView.Adapter<AnswerAdapter.AnswerViewHolder> {
 
@@ -56,3 +58,4 @@ public class AnswerAdapter extends RecyclerView.Adapter<AnswerAdapter.AnswerView
         return answers == null ? 0: answers.size();
     }
 }
+

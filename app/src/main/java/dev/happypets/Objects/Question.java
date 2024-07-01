@@ -95,8 +95,12 @@ public class Question {
     }
 
     public void addAnswer(Answer answer) {
-        if (answer != null){
-            this.relatedAnswers.add(answer);
+        if (relatedAnswers == null) {
+            relatedAnswers = new ArrayList<>();
         }
+        relatedAnswers.add(answer);
     }
+
+
+
 }

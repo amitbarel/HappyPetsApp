@@ -19,29 +19,33 @@ import dev.happypets.R;
 
 public class HomeFragment extends Fragment {
 
-    private RecyclerView questionUpdates;
-    private GridView animalTypes;
-//    private DataManager dataManager;
-    private ArrayList<AnimalType> kinds;
+        private RecyclerView questionUpdates;
+        private GridView animalTypes;
+        //    private DataManager dataManager;
+        private ArrayList<AnimalType> kinds;
 
-    public HomeFragment() {
-        // Required empty public constructor
+        public HomeFragment() {
+            // Required empty public constructor
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View view = inflater.inflate(R.layout.fragment_home, container, false);
+            findViews(view);
+            return view;
+        }
+
+        private void findViews(View view) {
+            questionUpdates = view.findViewById(R.id.question_updates);
+            animalTypes = view.findViewById(R.id.animals_choose);
+            kinds = DataManager.getAnimalTypes();
+            PetImgAdapter adapter = new PetImgAdapter(getContext(), kinds);
+            GridAdapter gridAdapter = new GridAdapter(getContext(), adapter);
+            animalTypes.setAdapter(gridAdapter);
+        }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
-        findViews(view);
-        return view;
-    }
 
-    private void findViews(View view) {
-        questionUpdates = view.findViewById(R.id.question_updates);
-        animalTypes = view.findViewById(R.id.animals_choose);
-        kinds = DataManager.getAnimalTypes();
-        PetImgAdapter adapter = new PetImgAdapter(getContext(), kinds);
-        GridAdapter gridAdapter = new GridAdapter(getContext(), adapter);
-        animalTypes.setAdapter(gridAdapter);
-    }
-}
+
+

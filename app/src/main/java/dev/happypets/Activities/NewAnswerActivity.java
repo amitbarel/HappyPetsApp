@@ -2,11 +2,11 @@ package dev.happypets.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
@@ -14,6 +14,7 @@ import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textview.MaterialTextView;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 import dev.happypets.Adapters.AnswerAdapter;
@@ -54,7 +55,7 @@ public class NewAnswerActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        findViewById(R.id.img_back_from_answer).setOnClickListener(v -> {
+        back_arrow.setOnClickListener(v -> {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
@@ -67,8 +68,7 @@ public class NewAnswerActivity extends AppCompatActivity {
             finish();
             return;
         }
-
-
+        relatedAnswers.setLayoutManager(new LinearLayoutManager(this));
         dataManager.getQuestionById(chosenQuestionId, new DataManager.OnQuestionRetrievedListener() {
             @Override
             public void onQuestionRetrieved(Question question) {
@@ -76,7 +76,6 @@ public class NewAnswerActivity extends AppCompatActivity {
                     title.setText(question.getTitle());
                     body.setText(question.getText());
 
-                    // Display askedBy user's name
                     User askedByUser = question.getAskedBy();
                     if (askedByUser != null && askedByUser.getName() != null) {
                         askedBy.setText(askedByUser.getName());
@@ -84,19 +83,20 @@ public class NewAnswerActivity extends AppCompatActivity {
                         askedBy.setText("Unknown");
                     }
 
-                    // Fetch related answers
                     dataManager.getAnswersByQuestionId(chosenQuestionId, answers -> {
-                        relatedAnswers.setAdapter(new AnswerAdapter(NewAnswerActivity.this, answers));
+                        if (answers != null) {
+                            relatedAnswers.setAdapter(new AnswerAdapter(NewAnswerActivity.this, answers));
+                        }
                     });
-
-                    // Button actions
                     btnRespond.setOnClickListener(v -> {
                         String newAnswerText = Objects.requireNonNull(answer.getText()).toString();
                         if (!newAnswerText.isEmpty()) {
                             Answer newAnswer = new Answer().setText(newAnswerText);
                             dataManager.addNewAnswer(chosenQuestionId, newAnswer);
                             Toast.makeText(NewAnswerActivity.this, "Answer added successfully", Toast.LENGTH_SHORT).show();
-                            finish();
+                            dataManager.getAnswersByQuestionId(chosenQuestionId, answers -> {
+                                relatedAnswers.setAdapter(new AnswerAdapter(NewAnswerActivity.this, answers));
+                            });
                         } else {
                             Toast.makeText(NewAnswerActivity.this, "Please enter an answer", Toast.LENGTH_SHORT).show();
                         }
@@ -114,11 +114,5 @@ public class NewAnswerActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-
     }
-
-
-
-
 }
