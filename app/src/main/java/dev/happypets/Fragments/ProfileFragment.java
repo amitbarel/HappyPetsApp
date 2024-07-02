@@ -2,7 +2,9 @@ package dev.happypets.Fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -14,6 +16,7 @@ import com.google.android.material.textview.MaterialTextView;
 
 import java.util.ArrayList;
 
+import dev.happypets.Adapters.PetAdapter;
 import dev.happypets.Adapters.QuestionAdapter;
 import dev.happypets.Database.DataManager;
 import dev.happypets.Objects.Question;
@@ -23,11 +26,13 @@ public class ProfileFragment extends Fragment {
 
     private MaterialTextView header_profile;
     private RecyclerView my_pets;
+
     private MaterialButton btn_update;
     private MaterialTextView header_questions;
     private RecyclerView my_questions;
 
     private ArrayList<Question> myQuestions;
+    private ArrayList<String> myPetTypes; // Assuming this will hold pet types
 
     private QuestionAdapter questionAdapter;
 
@@ -40,7 +45,7 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         findViews(view);
-//        myQuestions = DataManager.getInstance().getMyQuestions();
+
         return view;
     }
 
@@ -51,4 +56,8 @@ public class ProfileFragment extends Fragment {
         header_questions = view.findViewById(R.id.header_questions);
         my_questions = view.findViewById(R.id.my_questions);
     }
+
+
+
+
 }

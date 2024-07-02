@@ -137,32 +137,12 @@
                 userRef.addListenerForSingleValueEvent(listener);
             }
         }
-        public void getAnswersByQuestionId(String questionId, AnswerCallback callback) {
-            questionsRef.child(questionId).child("answers").addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    ArrayList<Answer> answers = new ArrayList<>();
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        Answer answer = snapshot.getValue(Answer.class);
-                        if (answer != null) {
-                            answers.add(answer);
-                        }
-                    }
-                    callback.onCallback(answers);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Log.e("DataManager", "Error fetching answers: " + databaseError.getMessage());
-                }
-            });
-        }
         public void addNewAnswer(String questionId, Answer answer) {
-            DatabaseReference ref = questionsRef.child(questionId).child("answers").push();
-            String answerId = ref.getKey();
+            DatabaseReference answersRef = questionsRef.child(questionId).child("answers").push();
+            String answerId = answersRef.getKey();
             if (answerId != null) {
                 answer.setAnswerId(answerId);
-                ref.setValue(answer)
+                answersRef.setValue(answer)
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
                                 // Update question with the new answer locally
@@ -196,6 +176,28 @@
             }
         }
 
+        public void getAnswersByQuestionId(String questionId, AnswerCallback callback) {
+            questionsRef.child(questionId).child("answers").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    ArrayList<Answer> answers = new ArrayList<>();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Answer answer = snapshot.getValue(Answer.class);
+                        if (answer != null) {
+                            answers.add(answer);
+                        }
+                    }
+                    callback.onCallback(answers); // Call the callback with the retrieved answers
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.e("DataManager", "Error fetching answers: " + databaseError.getMessage());
+                }
+            });
+        }
+
+
 
         public void addNewAnswert(String questionId, Answer answer) {
             questionsRef.child("questions").child(questionId).child("answers").push().setValue(answer)
@@ -221,6 +223,8 @@
                         }
                     });
         }
+
+
 
 
         public interface OnQuestionsRetrievedListener {

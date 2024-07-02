@@ -1,6 +1,5 @@
 package dev.happypets.Activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,7 +13,6 @@ import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textview.MaterialTextView;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 import dev.happypets.Adapters.AnswerAdapter;
@@ -32,6 +30,7 @@ public class NewAnswerActivity extends AppCompatActivity {
     private TextInputEditText answer;
     private MaterialButton btnRespond;
     private ShapeableImageView back_arrow;
+    AnswerAdapter answerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +60,8 @@ public class NewAnswerActivity extends AppCompatActivity {
             finish();
         });
 
+        relatedAnswers.setLayoutManager(new LinearLayoutManager(this));
+
         Intent intent = getIntent();
         String chosenQuestionId = intent.getStringExtra("question_id");
         if (chosenQuestionId == null) {
@@ -68,7 +69,8 @@ public class NewAnswerActivity extends AppCompatActivity {
             finish();
             return;
         }
-        relatedAnswers.setLayoutManager(new LinearLayoutManager(this));
+
+        // Fetch question details and answers
         dataManager.getQuestionById(chosenQuestionId, new DataManager.OnQuestionRetrievedListener() {
             @Override
             public void onQuestionRetrieved(Question question) {
@@ -83,19 +85,27 @@ public class NewAnswerActivity extends AppCompatActivity {
                         askedBy.setText("Unknown");
                     }
 
+                    // Get answers for the question
+
                     dataManager.getAnswersByQuestionId(chosenQuestionId, answers -> {
                         if (answers != null) {
-                            relatedAnswers.setAdapter(new AnswerAdapter(NewAnswerActivity.this, answers));
+                            answerAdapter = new AnswerAdapter(NewAnswerActivity.this, answers);
+                            relatedAnswers.setAdapter(answerAdapter);
                         }
                     });
+
                     btnRespond.setOnClickListener(v -> {
                         String newAnswerText = Objects.requireNonNull(answer.getText()).toString();
                         if (!newAnswerText.isEmpty()) {
                             Answer newAnswer = new Answer().setText(newAnswerText);
                             dataManager.addNewAnswer(chosenQuestionId, newAnswer);
                             Toast.makeText(NewAnswerActivity.this, "Answer added successfully", Toast.LENGTH_SHORT).show();
+                            // Refresh answers after adding new answer
                             dataManager.getAnswersByQuestionId(chosenQuestionId, answers -> {
-                                relatedAnswers.setAdapter(new AnswerAdapter(NewAnswerActivity.this, answers));
+                                if (answers != null) {
+                                    answerAdapter = new AnswerAdapter(NewAnswerActivity.this, answers);
+                                    relatedAnswers.setAdapter(answerAdapter);
+                                }
                             });
                         } else {
                             Toast.makeText(NewAnswerActivity.this, "Please enter an answer", Toast.LENGTH_SHORT).show();
@@ -114,5 +124,13 @@ public class NewAnswerActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+
+        back_arrow.setOnClickListener(v -> {
+            Intent intent2 = new Intent(NewAnswerActivity.this, NewAnswerActivity.class);
+            startActivity(intent2);
+            finish();
+        });
     }
+    
 }

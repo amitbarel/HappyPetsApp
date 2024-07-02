@@ -9,30 +9,24 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textview.MaterialTextView;
-;
-import java.util.ArrayList;
-import java.util.List;
 
-import dev.happypets.CallBacks.AnswerCallback;
+import java.util.ArrayList;
+
 import dev.happypets.Objects.Answer;
 import dev.happypets.R;
-
 
 public class AnswerAdapter extends RecyclerView.Adapter<AnswerAdapter.AnswerViewHolder> {
 
     private Context context;
-    private AnswerCallback answerCallback;
     private ArrayList<Answer> answers;
 
     public AnswerAdapter(Context context, ArrayList<Answer> answers) {
         this.context = context;
         this.answers = answers;
-        this.answerCallback = answerCallback;
     }
 
     public static class AnswerViewHolder extends RecyclerView.ViewHolder {
         private MaterialTextView answerBody;
-
 
         public AnswerViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -55,7 +49,6 @@ public class AnswerAdapter extends RecyclerView.Adapter<AnswerAdapter.AnswerView
 
     @Override
     public int getItemCount() {
-        return answers == null ? 0: answers.size();
+        return answers == null ? 0 : answers.size();
     }
 }
-
