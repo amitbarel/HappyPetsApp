@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/app_bg_color">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/welcome_msg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
         android:background="@color/gray_bg"
         android:layout_below="@id/welcome_msg"/>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/header_animals"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
