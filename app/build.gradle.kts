@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
+    id("androidx.navigation.safeargs")
 }
 
 android {
@@ -41,6 +42,10 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
+    implementation("androidx.core:core-ktx:1.8.0")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.5.3")
+    implementation("androidx.navigation:navigation-ui-ktx:2.5.3")
+
     //FireBase
     implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
     implementation("com.google.firebase:firebase-analytics")
@@ -53,7 +58,6 @@ dependencies {
     implementation ("com.google.firebase:firebase-auth:21.2.0") // Ensure this is the latest version
     implementation ("com.google.firebase:firebase-database:20.1.0") // Ensure this is the latest version
     implementation ("com.google.firebase:firebase-storage:20.1.0") // Ensure this is the latest version
-
 
 
     //Lottie

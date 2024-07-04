@@ -40,8 +40,7 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         dataManager = DataManager.getInstance(getContext());
         findViews(view);
@@ -57,6 +56,19 @@ public class HomeFragment extends Fragment {
         PetImgAdapter adapter = new PetImgAdapter(getContext(), kinds);
         GridAdapter gridAdapter = new GridAdapter(getContext(), adapter);
         animalTypes.setAdapter(gridAdapter);
+        animalTypes.setOnItemClickListener((parent, view1, position, id) -> {
+            String kind = kinds.get(position).getKind();
+            Bundle args = new Bundle();
+            args.putString("kind", kind);
+            getParentFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,
+                    QuestionsAnswersFragment.class,
+                    args).commit();
+//            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
+//            HomeFragmentDirections.ActionHomeFragmentToQaFragment action =
+//                    HomeFragmentDirections.actionHomeFragmentToQaFragment(kinds.get(position).getKind());
+//            navController.navigate(action);
+        });
+
     }
 
     private void fetchCurrentUser() {

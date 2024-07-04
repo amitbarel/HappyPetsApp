@@ -2,6 +2,10 @@ package dev.happypets.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -30,7 +34,6 @@ import dev.happypets.R;
 public class MainActivity extends AppCompatActivity {
 
     DataManager dataManager;
-    BottomNavigationView bottomNavigationView;
 
     HomeFragment homeFragment = new HomeFragment();
     QuestionsAnswersFragment qaFragment = new QuestionsAnswersFragment();
@@ -45,20 +48,21 @@ public class MainActivity extends AppCompatActivity {
 
         readFromDatabase();
 
-        bottomNavigationView = findViewById(R.id.bottomNavigationView);
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.navigation_container,homeFragment).commit();
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        NavController navController = navHostFragment.getNavController();
+        NavigationUI.setupWithNavController(bottomNavigationView, navController);
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.home) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.navigation_container, homeFragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, homeFragment).commit();
                 return true;
             } else if (itemId == R.id.qa) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.navigation_container, qaFragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, qaFragment).commit();
                 return true;
             } else if (itemId == R.id.profile) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.navigation_container, profileFragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, profileFragment).commit();
                 return true;
             }
             return false;
@@ -74,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     questions.add(new Question()
                             .setQuestionId(dataSnapshot.getKey())
                             .setTitle(dataSnapshot.child("title").getValue(String.class))

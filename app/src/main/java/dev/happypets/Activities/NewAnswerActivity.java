@@ -54,13 +54,6 @@ public class NewAnswerActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        back_arrow.setOnClickListener(v -> {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        });
-
-        relatedAnswers.setLayoutManager(new LinearLayoutManager(this));
 
         Intent intent = getIntent();
         String chosenQuestionId = intent.getStringExtra("question_id");
@@ -69,6 +62,14 @@ public class NewAnswerActivity extends AppCompatActivity {
             finish();
             return;
         }
+
+        back_arrow.setOnClickListener(v -> {
+            Intent formerIntent = new Intent(this, MainActivity.class);
+            startActivity(formerIntent);
+            finish();
+        });
+
+        relatedAnswers.setLayoutManager(new LinearLayoutManager(this));
 
         // Fetch question details and answers
         dataManager.getQuestionById(chosenQuestionId, new DataManager.OnQuestionRetrievedListener() {
@@ -82,7 +83,7 @@ public class NewAnswerActivity extends AppCompatActivity {
                     if (askedByUser != null && askedByUser.getName() != null) {
                         askedBy.setText(askedByUser.getName());
                     } else {
-                        askedBy.setText("Unknown");
+                        askedBy.setText("Unknown user");
                     }
 
                     // Get answers for the question
@@ -106,6 +107,9 @@ public class NewAnswerActivity extends AppCompatActivity {
                                     answerAdapter = new AnswerAdapter(NewAnswerActivity.this, answers);
                                     relatedAnswers.setAdapter(answerAdapter);
                                 }
+                                Intent formerIntent = new Intent(getApplicationContext(), MainActivity.class);
+                                startActivity(formerIntent);
+                                finish();
                             });
                         } else {
                             Toast.makeText(NewAnswerActivity.this, "Please enter an answer", Toast.LENGTH_SHORT).show();
@@ -123,13 +127,6 @@ public class NewAnswerActivity extends AppCompatActivity {
                 Toast.makeText(NewAnswerActivity.this, "Error fetching question: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 finish();
             }
-        });
-
-
-        back_arrow.setOnClickListener(v -> {
-            Intent intent2 = new Intent(NewAnswerActivity.this, NewAnswerActivity.class);
-            startActivity(intent2);
-            finish();
         });
     }
     
