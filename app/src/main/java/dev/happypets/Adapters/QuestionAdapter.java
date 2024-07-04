@@ -92,4 +92,10 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Quseti
     public int getItemCount() {
         return questions == null ? 0: questions.size();
     }
+
+    public void updateQuestions(ArrayList<Question> newQuestions) {
+        questions.clear();
+        questions.addAll(newQuestions);
+        notifyDataSetChanged();
+    }
 }
