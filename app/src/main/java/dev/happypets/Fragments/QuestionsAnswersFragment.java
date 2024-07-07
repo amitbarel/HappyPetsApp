@@ -32,6 +32,7 @@ public class QuestionsAnswersFragment extends Fragment {
     RecyclerView recyclerQuestions;
     QuestionAdapter questionAdapter;
     DataManager dataManager;
+    ArrayList<Question> questionList;
 
     public QuestionsAnswersFragment() {
         // Required empty public constructor
@@ -40,7 +41,7 @@ public class QuestionsAnswersFragment extends Fragment {
     QuestionCallBack questionCallBack = new QuestionCallBack() {
         @Override
         public void favoriteClicked(Question question, int position) {
-
+            //The adapter handles it
         }
 
         @Override
@@ -73,8 +74,8 @@ public class QuestionsAnswersFragment extends Fragment {
                 return true;
             }
         });
-        recyclerQuestions.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        recyclerQuestions.setLayoutManager(new LinearLayoutManager(getContext()));
         Bundle arguments = getArguments();
         if (arguments != null) {
             String specificAnimal = arguments.getString("kind");
@@ -85,19 +86,28 @@ public class QuestionsAnswersFragment extends Fragment {
                     } else {
                         Log.d("Questions", specificQuestions.toString());
                     }
-                    questionAdapter = new QuestionAdapter(getContext(), specificQuestions, questionCallBack);
-                    recyclerQuestions.setAdapter(questionAdapter);
-                    questionAdapter.notifyDataSetChanged();
+                    questionList = new ArrayList<>(specificQuestions);
+                    setupAdapter(questionList);
                 });
             }
         } else {
-            questionAdapter = new QuestionAdapter(getContext(), dataManager.getQuestions(), questionCallBack);
-            recyclerQuestions.setAdapter(questionAdapter);
+            questionList = new ArrayList<>(dataManager.getQuestions());
+            setupAdapter(questionList);
         }
         newQuestion.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), NewQuestionActivity.class);
             startActivity(intent);
         });
+    }
+
+    private void setupAdapter(ArrayList<Question> questions) {
+        if (questionAdapter == null) {
+            questionAdapter = new QuestionAdapter(getContext(), questions, questionCallBack);
+            recyclerQuestions.setAdapter(questionAdapter);
+        } else {
+            questionAdapter.updateQuestions(questions);
+            questionAdapter.notifyDataSetChanged();
+        }
     }
 
     private void filterList(String text) {
@@ -110,9 +120,7 @@ public class QuestionsAnswersFragment extends Fragment {
         if (filteredList.isEmpty()) {
             Toast.makeText(getContext(), "No questions found", Toast.LENGTH_SHORT).show();
         } else {
-            questionAdapter = new QuestionAdapter(getContext(), filteredList, questionCallBack);
-            recyclerQuestions.setAdapter(questionAdapter);
-            questionAdapter.notifyDataSetChanged();
+            setupAdapter(filteredList);
         }
     }
 

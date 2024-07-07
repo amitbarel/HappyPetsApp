@@ -26,7 +26,7 @@ import dev.happypets.R;
 
 public class DataManager {
 
-    private FirebaseAuth firebaseAuth;
+    private final FirebaseAuth firebaseAuth;
     private static DataManager instance;
     private final FirebaseDatabase firebaseDatabase;
     private ArrayList<Question> questions;
@@ -87,15 +87,19 @@ public class DataManager {
         ref.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DataSnapshot dataSnapshot = task.getResult();
-                Question question = dataSnapshot.getValue(Question.class);
-                listener.onQuestionRetrieved(question);
+                if (dataSnapshot.exists()) {
+                    Question question = getQuestion(dataSnapshot);
+                    listener.onQuestionRetrieved(question);
+                } else {
+                    listener.onError(new Exception("Question not found"));
+                }
             } else {
                 listener.onError(task.getException());
             }
         });
     }
 
-    public ArrayList<Question> getQuestionsByEmail(String email, final OnQuestionsRetrievedListener listener) {
+    public void getQuestionsByEmail(String email, final OnQuestionsRetrievedListener listener) {
         ArrayList<Question> myQuestions = new ArrayList<>();
         questionsRef.get().addOnSuccessListener(dataSnapshot -> {
             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -106,10 +110,9 @@ public class DataManager {
             }
             listener.onQuestionsRetrieved(myQuestions);
         });
-        return myQuestions;
     }
 
-    public ArrayList<Question> getQuestionsByCategory(String category, final OnQuestionsRetrievedListener listener) {
+    public void getQuestionsByCategory(String category, final OnQuestionsRetrievedListener listener) {
         ArrayList<Question> relatedQuestions = new ArrayList<>();
         questionsRef.orderByChild("category").equalTo(category).get().addOnSuccessListener(dataSnapshot -> {
             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -118,7 +121,6 @@ public class DataManager {
             }
             listener.onQuestionsRetrieved(relatedQuestions);
         });
-        return relatedQuestions;
     }
 
     @NonNull
@@ -130,7 +132,7 @@ public class DataManager {
                 .setAskedBy(snapshot.child("askedBy").getValue(User.class))
                 .setCategory(snapshot.child("category").getValue(String.class))
                 .setRelatedAnswers(addAnswersManually(snapshot.child("relatedAnswers")))
-                .setFavorite(snapshot.child("favorite").getValue(Boolean.class));
+                .setFavorite(Boolean.TRUE.equals(snapshot.child("favorite").getValue(Boolean.class)));
         return question;
     }
 
@@ -171,7 +173,6 @@ public class DataManager {
                 @Override
                 public void onQuestionRetrieved(Question question) {
                     if (question == null) return;
-
                     question.addAnswer(answer);
                     questionsRef.child(questionId).setValue(question);
                 }

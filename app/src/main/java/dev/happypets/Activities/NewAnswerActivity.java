@@ -13,6 +13,7 @@ import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textview.MaterialTextView;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 import dev.happypets.Adapters.AnswerAdapter;
@@ -30,7 +31,7 @@ public class NewAnswerActivity extends AppCompatActivity {
     private TextInputEditText answer;
     private MaterialButton btnRespond;
     private ShapeableImageView back_arrow;
-    AnswerAdapter answerAdapter;
+    private AnswerAdapter answerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +51,12 @@ public class NewAnswerActivity extends AppCompatActivity {
         relatedAnswers = findViewById(R.id.recycle_answers);
         answer = findViewById(R.id.et_answer);
         btnRespond = findViewById(R.id.btn_respond);
-        back_arrow= findViewById(R.id.img_back_from_answer);
+        back_arrow = findViewById(R.id.img_back_from_answer);
     }
 
     private void initViews() {
-
         Intent intent = getIntent();
+        relatedAnswers.setLayoutManager(new LinearLayoutManager(this));
         String chosenQuestionId = intent.getStringExtra("question_id");
         if (chosenQuestionId == null) {
             Toast.makeText(this, "No question ID provided", Toast.LENGTH_SHORT).show();
@@ -89,10 +90,12 @@ public class NewAnswerActivity extends AppCompatActivity {
                     // Get answers for the question
 
                     dataManager.getAnswersByQuestionId(chosenQuestionId, answers -> {
-                        if (answers != null) {
-                            answerAdapter = new AnswerAdapter(NewAnswerActivity.this, answers);
-                            relatedAnswers.setAdapter(answerAdapter);
-                        }
+                        runOnUiThread(() -> {
+                            if (answers != null) {
+                                answerAdapter = new AnswerAdapter(NewAnswerActivity.this, answers);
+                                relatedAnswers.setAdapter(answerAdapter);
+                            }
+                        });
                     });
 
                     btnRespond.setOnClickListener(v -> {
@@ -129,5 +132,5 @@ public class NewAnswerActivity extends AppCompatActivity {
             }
         });
     }
-    
+
 }
