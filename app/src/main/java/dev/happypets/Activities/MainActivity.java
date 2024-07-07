@@ -71,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void readFromDatabase() {
         final ArrayList<Question> questions = new ArrayList<>();
-        final ArrayList<Answer> answers = new ArrayList<>();
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("questions");
@@ -79,11 +78,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    questions.add(new Question()
-                            .setQuestionId(dataSnapshot.getKey())
-                            .setTitle(dataSnapshot.child("title").getValue(String.class))
-                            .setCategory(dataSnapshot.child("category").getValue(String.class))
-                            .setText(dataSnapshot.child("text").getValue(String.class)));
+                    questions.add(dataManager.getQuestion(dataSnapshot));
                 }
                 dataManager.setQuestions(questions);
             }

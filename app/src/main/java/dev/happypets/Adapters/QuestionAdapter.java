@@ -94,8 +94,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Quseti
     }
 
     public void updateQuestions(ArrayList<Question> newQuestions) {
-        questions.clear();
-        questions.addAll(newQuestions);
-        notifyDataSetChanged();
+        this.questions.clear();
+        this.questions.addAll(newQuestions);
     }
 }

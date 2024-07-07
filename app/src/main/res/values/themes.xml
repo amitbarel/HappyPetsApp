@@ -1,6 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.HappyPets" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/app_bg_color</item>
+        <item name="colorOnPrimary">@color/black</item>
 
     </style>
 

@@ -40,8 +40,9 @@ public class Question {
     }
 
 
-    public void setFavorite(boolean fav) {
+    public Question setFavorite(boolean fav) {
         this.favorite = fav;
+        return this;
     }
 
     public Question setQuestionId(String id){

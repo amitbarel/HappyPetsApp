@@ -45,7 +45,7 @@ public class ProfileFragment extends Fragment {
     QuestionCallBack questionCallBack = new QuestionCallBack() {
         @Override
         public void favoriteClicked(Question question, int position) {
-
+            //The adapter handles it
         }
 
         @Override
@@ -73,17 +73,18 @@ public class ProfileFragment extends Fragment {
 
     private void fetchCurrentUser() {
         my_questions.setLayoutManager(new LinearLayoutManager(getContext()));
+        myQuestions = new ArrayList<>();
+        questionAdapter = new QuestionAdapter(getContext(), myQuestions, questionCallBack);
         dataManager.getCurrentUserName(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     currentUser = dataSnapshot.getValue(User.class);
                     if (currentUser != null) {
-//                        myQuestions = new ArrayList<>();
                         Log.d("Email", currentUser.getEmail());
                         dataManager.getQuestionsByEmail(currentUser.getEmail(), questions -> {
                             if (questions != null){
-                                questionAdapter = new QuestionAdapter(getContext(), questions, questionCallBack);
+                                questionAdapter.updateQuestions(questions);
                                 my_questions.setAdapter(questionAdapter);
                                 Log.d("NewQuestionActivity", "Questions: " + questions.size());
                                 questionAdapter.notifyDataSetChanged();

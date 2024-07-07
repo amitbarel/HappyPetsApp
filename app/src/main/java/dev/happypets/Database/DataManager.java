@@ -95,36 +95,25 @@ public class DataManager {
         });
     }
 
-//        public ArrayList<Question> getQuestionsByEmail(String email, final OnQuestionsRetrievedListener listener) {
-//            questionsRef.child("askedBy").orderByChild("email").equalTo(email).get().addOnSuccessListener(dataSnapshot -> {
-//                ArrayList<Question> relatedQuestions = new ArrayList<>();
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    Question question = snapshot.getValue(Question.class);
-//                    relatedQuestions.add(question);
-//                }
-//                listener.onQuestionsRetrieved(relatedQuestions);
-//            });
-//            return relatedQuestions;
-//        }
-
-    public void getQuestionsByEmail(String email, final OnQuestionsRetrievedListener listener) {
+    public ArrayList<Question> getQuestionsByEmail(String email, final OnQuestionsRetrievedListener listener) {
+        ArrayList<Question> myQuestions = new ArrayList<>();
         questionsRef.get().addOnSuccessListener(dataSnapshot -> {
-            ArrayList<Question> relatedQuestions = new ArrayList<>();
             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                Question question = snapshot.getValue(Question.class);
+                Question question = getQuestion(snapshot);
                 if (question.getAskedBy().getEmail().equals(email)) {
-                    relatedQuestions.add(question);
+                    myQuestions.add(question);
                 }
             }
-            listener.onQuestionsRetrieved(relatedQuestions);
+            listener.onQuestionsRetrieved(myQuestions);
         });
+        return myQuestions;
     }
 
     public ArrayList<Question> getQuestionsByCategory(String category, final OnQuestionsRetrievedListener listener) {
         ArrayList<Question> relatedQuestions = new ArrayList<>();
         questionsRef.orderByChild("category").equalTo(category).get().addOnSuccessListener(dataSnapshot -> {
             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                Question question = snapshot.getValue(Question.class);
+                Question question = getQuestion(snapshot);
                 relatedQuestions.add(question);
             }
             listener.onQuestionsRetrieved(relatedQuestions);
@@ -132,9 +121,26 @@ public class DataManager {
         return relatedQuestions;
     }
 
+    @NonNull
+    public Question getQuestion(DataSnapshot snapshot) {
+        Question question = new Question();
+        question.setQuestionId(snapshot.getKey())
+                .setText(snapshot.child("text").getValue(String.class))
+                .setTitle(snapshot.child("title").getValue(String.class))
+                .setAskedBy(snapshot.child("askedBy").getValue(User.class))
+                .setCategory(snapshot.child("category").getValue(String.class))
+                .setRelatedAnswers(addAnswersManually(snapshot.child("relatedAnswers")))
+                .setFavorite(snapshot.child("favorite").getValue(Boolean.class));
+        return question;
+    }
 
-    public void addToRelatedQuestions(String questionId, Answer answer) {
-        questions.stream().filter(q -> q.getQuestionId().equals(questionId)).findFirst().ifPresent(question -> question.addAnswer(answer));
+    public ArrayList<Answer> addAnswersManually(DataSnapshot relatedAnswers) {
+        ArrayList<Answer> answers = new ArrayList<>();
+        for (DataSnapshot snapshot : relatedAnswers.getChildren()) {
+            Answer answer = snapshot.getValue(Answer.class);
+            answers.add(answer);
+        }
+        return answers;
     }
 
     public ArrayList<String> getAnimalNames() {
@@ -155,40 +161,26 @@ public class DataManager {
     public void addNewAnswer(String questionId, Answer answer) {
         DatabaseReference answersRef = questionsRef.child(questionId).child("answers").push();
         String answerId = answersRef.getKey();
-        if (answerId != null) {
-            answer.setAnswerId(answerId);
-            answersRef.setValue(answer)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            // Update question with the new answer locally
-                            getQuestionById(questionId, new OnQuestionRetrievedListener() {
-                                @Override
-                                public void onQuestionRetrieved(Question question) {
-                                    if (question != null) {
-                                        question.addAnswer(answer);
-                                        questionsRef.child(questionId).setValue(question)
-                                                .addOnCompleteListener(task1 -> {
-                                                    if (task1.isSuccessful()) {
-                                                        Log.d("DataManager", "Question updated with new answer");
-                                                    } else {
-                                                        Log.e("DataManager", "Error updating question: " + task1.getException().getMessage());
-                                                    }
-                                                });
-                                    }
-                                }
+        if (answerId == null) return;
 
-                                @Override
-                                public void onError(Exception e) {
-                                    Log.e("DataManager", "Error fetching question: " + e.getMessage());
-                                }
-                            });
-                        } else {
-                            Log.e("DataManager", "Error adding answer: " + task.getException().getMessage());
-                        }
-                    });
-        } else {
-            Log.e("DataManager", "AnswerID is null");
-        }
+        answer.setAnswerId(answerId);
+        answersRef.setValue(answer).addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) return;
+
+            getQuestionById(questionId, new OnQuestionRetrievedListener() {
+                @Override
+                public void onQuestionRetrieved(Question question) {
+                    if (question == null) return;
+
+                    question.addAnswer(answer);
+                    questionsRef.child(questionId).setValue(question);
+                }
+
+                @Override
+                public void onError(Exception e) {
+                }
+            });
+        });
     }
 
     public void getAnswersByQuestionId(String questionId, AnswerCallback callback) {
@@ -211,32 +203,6 @@ public class DataManager {
             }
         });
     }
-
-
-//    public void addNewAnswer(String questionId, Answer answer) {
-//        questionsRef.child("questions").child(questionId).child("answers").push().setValue(answer)
-//                .addOnCompleteListener(task -> {
-//                    if (task.isSuccessful()) {
-//                        getQuestionById(questionId, new OnQuestionRetrievedListener() {
-//                            @Override
-//                            public void onQuestionRetrieved(Question question) {
-//                                if (question != null) {
-//                                    if (question.getRelatedAnswers() == null) {
-//                                        question.setRelatedAnswers(new ArrayList<>());
-//                                    }
-//                                    question.addAnswer(answer);
-//                                    questionsRef.child("questions").child(questionId).setValue(question);
-//                                }
-//                            }
-//
-//                            @Override
-//                            public void onError(Exception e) {
-//
-//                            }
-//                        });
-//                    }
-//                });
-//    }
 
 
     public interface OnQuestionsRetrievedListener {
