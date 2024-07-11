@@ -33,6 +33,7 @@ public class DataManager {
 
     private final DatabaseReference questionsRef;
     private ArrayList<AnimalType> animalTypes;
+    private FirebaseUser currentUser;
 
     public DataManager(Context context) {
         this.firebaseDatabase = FirebaseDatabase.getInstance();
@@ -40,6 +41,8 @@ public class DataManager {
         this.questions = new ArrayList<>();
         this.animalTypes = getAnimalTypes();
         this.firebaseAuth = FirebaseAuth.getInstance();
+        currentUser = firebaseAuth.getCurrentUser();
+
     }
 
     public static synchronized DataManager getInstance(Context context) {
@@ -161,7 +164,7 @@ public class DataManager {
     }
 
     public void addNewAnswer(String questionId, Answer answer) {
-        DatabaseReference answersRef = questionsRef.child(questionId).child("answers").push();
+        DatabaseReference answersRef = questionsRef.child(questionId).child("relatedAnswers").push();
         String answerId = answersRef.getKey();
         if (answerId == null) return;
 
@@ -179,13 +182,15 @@ public class DataManager {
 
                 @Override
                 public void onError(Exception e) {
+                    Log.e("DataManager", "Error adding answer to question: " + e.getMessage());
                 }
             });
         });
     }
 
+
     public void getAnswersByQuestionId(String questionId, AnswerCallback callback) {
-        questionsRef.child(questionId).child("answers").addListenerForSingleValueEvent(new ValueEventListener() {
+        questionsRef.child(questionId).child("relatedAnswers").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 ArrayList<Answer> answers = new ArrayList<>();
@@ -193,6 +198,7 @@ public class DataManager {
                     Answer answer = snapshot.getValue(Answer.class);
                     if (answer != null) {
                         answers.add(answer);
+                        Log.d("DataManager", "Retrieved answer: " + answer.getText());
                     }
                 }
                 callback.onCallback(answers); // Call the callback with the retrieved answers
@@ -204,6 +210,19 @@ public class DataManager {
             }
         });
     }
+
+
+
+    public void getCurrentUserPets(ValueEventListener listener) {
+        if (currentUser != null) {
+            DatabaseReference petsRef = firebaseDatabase.getReference("users").child(currentUser.getUid()).child("pet");
+            petsRef.addListenerForSingleValueEvent(listener);
+        } else {
+            Log.e("DataManager", "Current user is null");
+        }
+    }
+
+
 
 
     public interface OnQuestionsRetrievedListener {

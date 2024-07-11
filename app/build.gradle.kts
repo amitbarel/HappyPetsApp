@@ -59,7 +59,9 @@ dependencies {
     implementation ("com.google.firebase:firebase-database:20.1.0") // Ensure this is the latest version
     implementation ("com.google.firebase:firebase-storage:20.1.0") // Ensure this is the latest version
 
-
+    //glaid
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
+    //annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
     //Lottie
     implementation("com.airbnb.android:lottie:5.2.0")
 

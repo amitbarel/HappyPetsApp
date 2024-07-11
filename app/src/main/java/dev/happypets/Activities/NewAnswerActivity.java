@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
@@ -13,7 +14,7 @@ import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textview.MaterialTextView;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import dev.happypets.Adapters.AnswerAdapter;
@@ -70,8 +71,6 @@ public class NewAnswerActivity extends AppCompatActivity {
             finish();
         });
 
-        relatedAnswers.setLayoutManager(new LinearLayoutManager(this));
-
         // Fetch question details and answers
         dataManager.getQuestionById(chosenQuestionId, new DataManager.OnQuestionRetrievedListener() {
             @Override
@@ -88,12 +87,17 @@ public class NewAnswerActivity extends AppCompatActivity {
                     }
 
                     // Get answers for the question
-
                     dataManager.getAnswersByQuestionId(chosenQuestionId, answers -> {
                         runOnUiThread(() -> {
-                            if (answers != null) {
+                            if (answers != null && !answers.isEmpty()) {
+                                for (Answer ans : answers) {
+                                    Log.d("NewAnswerActivity", "Answer: " + ans.getText());
+                                }
                                 answerAdapter = new AnswerAdapter(NewAnswerActivity.this, answers);
                                 relatedAnswers.setAdapter(answerAdapter);
+                            } else {
+                                // Handle the case where no answers are found
+                                Toast.makeText(NewAnswerActivity.this, "No answers found for this question", Toast.LENGTH_SHORT).show();
                             }
                         });
                     });
@@ -101,18 +105,20 @@ public class NewAnswerActivity extends AppCompatActivity {
                     btnRespond.setOnClickListener(v -> {
                         String newAnswerText = Objects.requireNonNull(answer.getText()).toString();
                         if (!newAnswerText.isEmpty()) {
-                            Answer newAnswer = new Answer().setText(newAnswerText);
+                            Answer newAnswer = new Answer();
+                            newAnswer.setText(newAnswerText);
                             dataManager.addNewAnswer(chosenQuestionId, newAnswer);
                             Toast.makeText(NewAnswerActivity.this, "Answer added successfully", Toast.LENGTH_SHORT).show();
+                            // Clear input field
+                            answer.getText().clear();
                             // Refresh answers after adding new answer
                             dataManager.getAnswersByQuestionId(chosenQuestionId, answers -> {
-                                if (answers != null) {
-                                    answerAdapter = new AnswerAdapter(NewAnswerActivity.this, answers);
-                                    relatedAnswers.setAdapter(answerAdapter);
-                                }
-                                Intent formerIntent = new Intent(getApplicationContext(), MainActivity.class);
-                                startActivity(formerIntent);
-                                finish();
+                                runOnUiThread(() -> {
+                                    if (answers != null && !answers.isEmpty()) {
+                                        answerAdapter = new AnswerAdapter(NewAnswerActivity.this, answers);
+                                        relatedAnswers.setAdapter(answerAdapter);
+                                    }
+                                });
                             });
                         } else {
                             Toast.makeText(NewAnswerActivity.this, "Please enter an answer", Toast.LENGTH_SHORT).show();
@@ -132,5 +138,4 @@ public class NewAnswerActivity extends AppCompatActivity {
             }
         });
     }
-
 }
