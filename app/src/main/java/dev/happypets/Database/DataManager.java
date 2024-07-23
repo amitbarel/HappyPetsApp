@@ -134,8 +134,7 @@ public class DataManager {
                 .setTitle(snapshot.child("title").getValue(String.class))
                 .setAskedBy(snapshot.child("askedBy").getValue(User.class))
                 .setCategory(snapshot.child("category").getValue(String.class))
-                .setRelatedAnswers(addAnswersManually(snapshot.child("relatedAnswers")))
-                .setFavorite(Boolean.TRUE.equals(snapshot.child("favorite").getValue(Boolean.class)));
+                .setRelatedAnswers(addAnswersManually(snapshot.child("relatedAnswers")));
         return question;
     }
 
