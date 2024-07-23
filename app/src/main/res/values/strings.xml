@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Happy Pets</string>
+    <string name="email_for_ET">Email Address</string>
+    <string name="clinic_phone_ET">Clinic Phone</string>
+    <string name="clinic_address_for_ET">Clinic Address</string>
+    <string name="password">Password</string>
+    <string name="license_number_ET">Clinic License Number</string>
 </resources>

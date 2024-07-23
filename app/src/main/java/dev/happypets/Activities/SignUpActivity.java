@@ -58,10 +58,10 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void findViews() {
-        backBTN = findViewById(R.id.setting_btn_back);
-        rg_user_type = findViewById(R.id.rg_user_type);
-        vet_name = findViewById(R.id.et_vet_name);
-        vet_email = findViewById(R.id.et_vet_email);
+        backBTN = findViewById(R.id.BTN_back);
+        rg_user_type = findViewById(R.id.rg_type);
+        vet_name = findViewById(R.id.ET_vet_name);
+        vet_email = findViewById(R.id.ET_vet_email);
         vet_phone = findViewById(R.id.et_vet_phone);
         vet_address = findViewById(R.id.et_vet_address);
         vet_password = findViewById(R.id.et_vet_password);
@@ -81,29 +81,29 @@ public class SignUpActivity extends AppCompatActivity {
         backBTN.setOnClickListener(v -> finish());
         rg_user_type.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == R.id.rb_veterinarian) {
-                findViewById(R.id.layout_veterinarian).setVisibility(View.VISIBLE);
+                findViewById(R.id.layout_vet).setVisibility(View.VISIBLE);
                 findViewById(R.id.layout_regular_user).setVisibility(View.GONE);
             } else if (checkedId == R.id.rb_regular_user) {
-                findViewById(R.id.layout_veterinarian).setVisibility(View.GONE);
+                findViewById(R.id.layout_vet).setVisibility(View.GONE);
                 findViewById(R.id.layout_regular_user).setVisibility(View.VISIBLE);
             }
         });
 
-        btn_vet_upload_license.setOnClickListener(v -> openFileChooserForVet());
+        btn_vet_upload_license.setOnClickListener(v -> openFileChooser());
         btn_upload_pet_photo.setOnClickListener(v -> openFileChooser());
-        btn_signup.setOnClickListener(v -> userSignUp());
+        btn_signup.setOnClickListener(v -> generalSignUp());
     }
 
-    private void userSignUp() {
+    private void generalSignUp() {
         int selectedUserType = rg_user_type.getCheckedRadioButtonId();
         if (selectedUserType == R.id.rb_veterinarian) {
-            signUpVeterinarian();
+            vetSignUp();
         } else if (selectedUserType == R.id.rb_regular_user) {
-            signUpRegularUser();
+            userSignUp();
         }
     }
 
-    private void signUpVeterinarian() {
+    private void vetSignUp() {
         String vetName = Objects.requireNonNull(vet_name.getText()).toString().trim();
         String vetEmail = Objects.requireNonNull(vet_email.getText()).toString().trim();
         String vetPhone = Objects.requireNonNull(vet_phone.getText()).toString().trim();
@@ -111,12 +111,12 @@ public class SignUpActivity extends AppCompatActivity {
         String vetPassword = Objects.requireNonNull(vet_password.getText()).toString().trim();
         String vetLicense = Objects.requireNonNull(vet_license.getText()).toString().trim();
 
-        if (validateVeterinarianFields(vetName, vetEmail, vetPhone, vetAddress, vetPassword, vetLicense)) {
-            uploadFileVet(vetName, vetEmail, vetPhone, vetAddress, vetPassword, vetLicense);
+        if (validateVetFields(vetName, vetEmail, vetPhone, vetAddress, vetPassword, vetLicense)) {
+            uploadVetFile(vetName, vetEmail, vetPhone, vetAddress, vetPassword, vetLicense);
         }
     }
 
-    private void uploadFileVet(String vetName, String vetEmail, String vetPhone, String vetAddress, String vetPassword, String vetLicense) {
+    private void uploadVetFile(String vetName, String vetEmail, String vetPhone, String vetAddress, String vetPassword, String vetLicense) {
         if (vetImageUri != null) {
             StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("vet_images/" + UUID.randomUUID().toString());
             storageReference.putFile(vetImageUri)
@@ -129,7 +129,7 @@ public class SignUpActivity extends AppCompatActivity {
                                         if (task.isSuccessful()) {
                                             Vet vet = new Vet(vetName, vetEmail, vetPhone, vetAddress, vetPassword, vetLicense, imageUrl);
                                             mDatabase.getReference("Veterinarians")
-                                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                    .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                                                     .setValue(vet).addOnCompleteListener(dbTask -> {
                                                         if (dbTask.isSuccessful()) {
                                                             onSignupComplete(dbTask);
@@ -147,15 +147,13 @@ public class SignUpActivity extends AppCompatActivity {
                                     });
                         });
                     })
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(SignUpActivity.this, "Upload failed", Toast.LENGTH_SHORT).show();
-                    });
+                    .addOnFailureListener(e -> Toast.makeText(SignUpActivity.this, "Upload failed", Toast.LENGTH_SHORT).show());
         } else {
             Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void signUpRegularUser() {
+    private void userSignUp() {
         String userName = Objects.requireNonNull(user_name.getText()).toString().trim();
         String userEmail = Objects.requireNonNull(user_email.getText()).toString().trim();
         String userPassword = Objects.requireNonNull(user_password.getText()).toString().trim();
@@ -163,11 +161,11 @@ public class SignUpActivity extends AppCompatActivity {
         String petType = spinner_pet_type.getSelectedItem().toString();
 
         if (validateUserFields(userName, userEmail, userPassword, petName)) {
-            uploadFileUser(userEmail, userPassword, userName, petName, petType);
+            uploadUserFile(userEmail, userPassword, userName, petName, petType);
         }
     }
 
-    private void uploadFileUser(String userEmail, String userPassword, String userName, String petName, String petType) {
+    private void uploadUserFile(String userEmail, String userPassword, String userName, String petName, String petType) {
         if (imageUri != null) {
             StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("pet_images/" + UUID.randomUUID().toString());
             storageReference.putFile(imageUri)
@@ -192,15 +190,13 @@ public class SignUpActivity extends AppCompatActivity {
                                     });
                         });
                     })
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(SignUpActivity.this, "Upload failed", Toast.LENGTH_SHORT).show();
-                    });
+                    .addOnFailureListener(e -> Toast.makeText(SignUpActivity.this, "Upload failed", Toast.LENGTH_SHORT).show());
         } else {
             Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private boolean validateVeterinarianFields(String vetName, String vetEmail, String vetPhone, String vetAddress, String vetPassword, String vetLicense) {
+    private boolean validateVetFields(String vetName, String vetEmail, String vetPhone, String vetAddress, String vetPassword, String vetLicense) {
         if (vetName.isEmpty() || vetEmail.isEmpty() || vetPhone.isEmpty() || vetAddress.isEmpty() || vetPassword.isEmpty() || vetLicense.isEmpty()) {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
             return false;
@@ -239,12 +235,12 @@ public class SignUpActivity extends AppCompatActivity {
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
 
-    private void openFileChooserForVet() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST_VET);
-    }
+//    private void openFileChooserForVet() {
+//        Intent intent = new Intent();
+//        intent.setType("image/*");
+//        intent.setAction(Intent.ACTION_GET_CONTENT);
+//        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST_VET);
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

@@ -7,22 +7,21 @@ public class User {
     private String email;
     private String password;
     private ArrayList<Pet> pets;
-    private ArrayList<Question> favoriteQuestion;
+    private ArrayList<Question> favoriteQuestions;
 
     // Default constructor required for calls to DataSnapshot.getValue(User.class)
     public User() {
     }
 
-    public User(String name, String email, String password, Pet pet ) {
+    public User(String name, String email, String password, Pet pet) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.pets = new ArrayList<>();
         this.pets.add(pet);
-       this.favoriteQuestion = new ArrayList<>();
+        this.favoriteQuestions = new ArrayList<>();
 
     }
-
 
 
     public String getName() {
@@ -52,22 +51,24 @@ public class User {
         return this;
     }
 
-    public ArrayList<Pet> getPet() {
-        return pets;
+    public User setPets(ArrayList<Pet> pets) {
+        this.pets = pets;
+        return this;
     }
 
     public void addPet(Pet pet) {
         this.pets.add(pet);
     }
-    public ArrayList<Pet> getfavoriteQuestion() {
+
+    public ArrayList<Pet> getPets() {
         return pets;
     }
-    public void addfavoriteQuestion(Question favoriteQ) {
-        this.favoriteQuestion.add(favoriteQ);
+
+    public ArrayList<Question> getFavoriteQuestions() {
+        return favoriteQuestions;
     }
 
-    public User setPets(ArrayList<Pet> pets) {
-        this.pets = pets;
-        return this;
+    public void addToFavoriteQuestions(Question question) {
+        this.favoriteQuestions.add(question);
     }
 }

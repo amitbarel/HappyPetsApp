@@ -21,13 +21,13 @@ public class Answer {
         return answerId;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
     public Answer setAnswerId(String answerId) {
         this.answerId = answerId;
         return this;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public Answer setTitle(String title) {
@@ -41,6 +41,15 @@ public class Answer {
 
     public Answer setText(String text) {
         this.text = text;
+        return this;
+    }
+
+    public String getAnsweredByID() {
+        return answeredByID;
+    }
+
+    public Answer setAnsweredByID(String answeredByID) {
+        this.answeredByID = answeredByID;
         return this;
     }
 }

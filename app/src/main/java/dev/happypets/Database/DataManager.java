@@ -212,7 +212,6 @@ public class DataManager {
     }
 
 
-
     public void getCurrentUserPets(ValueEventListener listener) {
         if (currentUser != null) {
             DatabaseReference petsRef = firebaseDatabase.getReference("users").child(currentUser.getUid()).child("pet");
@@ -221,9 +220,6 @@ public class DataManager {
             Log.e("DataManager", "Current user is null");
         }
     }
-
-
-
 
     public interface OnQuestionsRetrievedListener {
         void onQuestionsRetrieved(ArrayList<Question> questions);

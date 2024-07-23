@@ -12,10 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-
 import dev.happypets.Objects.AnimalType;
-import dev.happypets.Objects.Pet;
 import dev.happypets.R;
 
 public class PetImgAdapter extends RecyclerView.Adapter<PetImgAdapter.PetViewHolder> {

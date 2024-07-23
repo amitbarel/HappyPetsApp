@@ -10,7 +10,7 @@
 
     <!-- Back Button -->
     <ImageButton
-        android:id="@+id/setting_btn_back"
+        android:id="@+id/BTN_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_back_arrow"
@@ -48,7 +48,7 @@
             android:layout_marginTop="20dp">
 
             <RadioGroup
-                android:id="@+id/rg_user_type"
+                android:id="@+id/rg_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -69,7 +69,7 @@
 
 
             <LinearLayout
-                android:id="@+id/layout_veterinarian"
+                android:id="@+id/layout_vet"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -79,7 +79,7 @@
                     android:layout_height="wrap_content"
                     style="@style/CustomTextInputLayout">
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_vet_name"
+                        android:id="@+id/ET_vet_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         style="@style/CustomTextInputEditText"
@@ -91,11 +91,11 @@
                     android:layout_height="wrap_content"
                     style="@style/CustomTextInputLayout">
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_vet_email"
+                        android:id="@+id/ET_vet_email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         style="@style/CustomTextInputEditText"
-                        android:hint="Email Address"
+                        android:hint="@string/email_for_ET"
                         android:inputType="textEmailAddress" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -108,7 +108,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         style="@style/CustomTextInputEditText"
-                        android:hint="Clinic Phone"
+                        android:hint="@string/clinic_phone_ET"
                         android:inputType="phone" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -121,7 +121,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         style="@style/CustomTextInputEditText"
-                        android:hint="Clinic Address" />
+                        android:hint="@string/clinic_address_for_ET" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -133,7 +133,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         style="@style/CustomTextInputEditText"
-                        android:hint="Password"
+                        android:hint="@string/password"
                         android:inputType="textPassword" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -146,7 +146,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         style="@style/CustomTextInputEditText"
-                        android:hint="Clinic License Number" />
+                        android:hint="@string/license_number_ET" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.button.MaterialButton
@@ -186,7 +186,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         style="@style/CustomTextInputEditText"
-                        android:hint="Email"
+                        android:hint="@string/email_for_ET"
                         android:inputType="textEmailAddress" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -199,7 +199,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         style="@style/CustomTextInputEditText"
-                        android:hint="Password"
+                        android:hint="@string/password"
                         android:inputType="textPassword" />
                 </com.google.android.material.textfield.TextInputLayout>
 

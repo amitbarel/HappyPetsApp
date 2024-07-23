@@ -14,7 +14,6 @@ import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textview.MaterialTextView;
 
-import java.util.List;
 import java.util.Objects;
 
 import dev.happypets.Adapters.AnswerAdapter;

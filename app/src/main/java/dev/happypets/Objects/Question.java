@@ -10,7 +10,6 @@ public class Question {
     private String text;
     private ArrayList<Answer> relatedAnswers;
     private String askedTime;
-    private boolean favorite;
     private User askedBy;
 
     public Question() {
@@ -23,7 +22,6 @@ public class Question {
         this.text = text;
         this.relatedAnswers = new ArrayList<>();
         this.askedTime = LocalTime.now().toString();
-        favorite = false;
     }
 
     public User getAskedBy() {
@@ -35,23 +33,13 @@ public class Question {
         return this;
     }
 
-    public boolean isFavorite() {
-        return favorite;
-    }
-
-
-    public Question setFavorite(boolean fav) {
-        this.favorite = fav;
-        return this;
+    public String getQuestionId() {
+        return questionId;
     }
 
     public Question setQuestionId(String id){
         this.questionId = id;
         return this;
-    }
-
-    public String getQuestionId() {
-        return questionId;
     }
 
     public String getCategory() {
@@ -66,7 +54,6 @@ public class Question {
     public String getAskedTime() {
         return askedTime;
     }
-
 
     public String getTitle() {
         return title;
@@ -90,16 +77,16 @@ public class Question {
         return relatedAnswers;
     }
 
-    public Question setRelatedAnswers(ArrayList<Answer> relatedAnswers) {
-        this.relatedAnswers = relatedAnswers;
-        return this;
-    }
-
     public void addAnswer(Answer answer) {
         if (relatedAnswers == null) {
             relatedAnswers = new ArrayList<>();
         }
         relatedAnswers.add(answer);
+    }
+
+    public Question setRelatedAnswers(ArrayList<Answer> relatedAnswers) {
+        this.relatedAnswers = relatedAnswers;
+        return this;
     }
 
 

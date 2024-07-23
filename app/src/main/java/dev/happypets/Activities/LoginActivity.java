@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void initViews() {
         btn_login.setOnClickListener(v -> signIn());
-        btn_signUp.setOnClickListener(v -> signup());
+        btn_signUp.setOnClickListener(v -> signUp());
     }
 
     private void signIn() {
@@ -79,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    private void signup() {
+    private void signUp() {
         Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
     }
