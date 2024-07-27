@@ -31,7 +31,6 @@ public class HomeFragment extends Fragment {
     private MaterialTextView welcomeMSG;
     private DataManager dataManager;
     private GridView animalTypes;
-    //    private DataManager dataManager;
     private ArrayList<AnimalType> kinds;
     private User currentUser;
 
@@ -63,10 +62,6 @@ public class HomeFragment extends Fragment {
             getParentFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,
                     QuestionsAnswersFragment.class,
                     args).commit();
-//            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
-//            HomeFragmentDirections.ActionHomeFragmentToQaFragment action =
-//                    HomeFragmentDirections.actionHomeFragmentToQaFragment(kinds.get(position).getKind());
-//            navController.navigate(action);
         });
 
     }
@@ -78,12 +73,12 @@ public class HomeFragment extends Fragment {
                 if (dataSnapshot.exists()) {
                     currentUser = dataSnapshot.getValue(User.class);
                     if (currentUser != null) {
-                        welcomeMSG.setText(welcomeMSG.getText().toString().concat(currentUser.getName()));
+                        welcomeMSG.setText(welcomeMSG.getText().toString().concat(" " + currentUser.getName()));
                     } else {
-                        welcomeMSG.setText(welcomeMSG.getText().toString().concat("Unknown User"));
+                        welcomeMSG.setText(welcomeMSG.getText().toString().concat(" Unknown User"));
                     }
                 } else {
-                    welcomeMSG.setText(welcomeMSG.getText().toString().concat("Unknown User"));
+                    welcomeMSG.setText(welcomeMSG.getText().toString().concat(" Unknown User"));
                 }
             }
 

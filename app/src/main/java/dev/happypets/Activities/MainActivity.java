@@ -1,6 +1,7 @@
 package dev.happypets.Activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -9,7 +10,6 @@ import androidx.navigation.ui.NavigationUI;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,6 +24,7 @@ import dev.happypets.Fragments.ProfileFragment;
 import dev.happypets.Fragments.QuestionsAnswersFragment;
 import dev.happypets.Objects.Question;
 import dev.happypets.R;
+import nl.joery.animatedbottombar.AnimatedBottomBar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,26 +43,43 @@ public class MainActivity extends AppCompatActivity {
 
         readFromDatabase();
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        AnimatedBottomBar bottomNavigationView = findViewById(R.id.bottomNavigationView);
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         assert navHostFragment != null;
-        NavController navController = navHostFragment.getNavController();
-        NavigationUI.setupWithNavController(bottomNavigationView, navController);
 
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-            if (itemId == R.id.home) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, homeFragment).commit();
-                return true;
-            } else if (itemId == R.id.qa) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, qaFragment).commit();
-                return true;
-            } else if (itemId == R.id.profile) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, profileFragment).commit();
-                return true;
+        bottomNavigationView.setOnTabSelectListener(new AnimatedBottomBar.OnTabSelectListener() {
+            @Override
+            public void onTabSelected(int lastIndex, @Nullable AnimatedBottomBar.Tab lastTab, int newIndex, @NonNull AnimatedBottomBar.Tab newTab) {
+                int id = newTab.getId();
+                if (id == R.id.home){
+                    getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, homeFragment).commit();
+                } else if (id == R.id.qa){
+                    getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, qaFragment).commit();
+                } else if (id == R.id.profile){
+                    getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, profileFragment).commit();
+                }
             }
-            return false;
+
+            @Override
+            public void onTabReselected(int i, @NonNull AnimatedBottomBar.Tab tab) {
+
+            }
         });
+
+//        bottomNavigationView.setOnItemSelectedListener(item -> {
+//            int itemId = item.getItemId();
+//            if (itemId == R.id.home) {
+//                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, homeFragment).commit();
+//                return true;
+//            } else if (itemId == R.id.qa) {
+//                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, qaFragment).commit();
+//                return true;
+//            } else if (itemId == R.id.profile) {
+//                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, profileFragment).commit();
+//                return true;
+//            }
+//            return false;
+//        });
     }
 
     private void readFromDatabase() {

@@ -21,7 +21,6 @@ public class Question {
         this.title = title;
         this.text = text;
         this.relatedAnswers = new ArrayList<>();
-        this.askedTime = LocalTime.now().toString();
     }
 
     public User getAskedBy() {
@@ -53,6 +52,11 @@ public class Question {
 
     public String getAskedTime() {
         return askedTime;
+    }
+
+    public Question setAskedTime(String askedTime) {
+        this.askedTime = askedTime;
+        return this;
     }
 
     public String getTitle() {

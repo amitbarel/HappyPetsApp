@@ -53,12 +53,12 @@ public class DataManager {
     }
 
     public static ArrayList<AnimalType> getAnimalTypes() {
-        AnimalType cat = new AnimalType("Cat", R.drawable.cat_image);
-        AnimalType dog = new AnimalType("Dog", R.drawable.dog_image);
-        AnimalType hamster = new AnimalType("Hamster", R.drawable.hamster_image);
-        AnimalType parrot = new AnimalType("Parrot", R.drawable.parrot_image);
-        AnimalType rabbit = new AnimalType("Rabbit", R.drawable.rabbit_image);
-        AnimalType fish = new AnimalType("Fish", R.drawable.fish_image);
+        AnimalType cat = new AnimalType("Cat", R.drawable.cat);
+        AnimalType dog = new AnimalType("Dog", R.drawable.dog);
+        AnimalType hamster = new AnimalType("Hamster", R.drawable.hamster);
+        AnimalType parrot = new AnimalType("Parrot", R.drawable.parrot);
+        AnimalType rabbit = new AnimalType("Rabbit", R.drawable.rabbit);
+        AnimalType fish = new AnimalType("Fish", R.drawable.clown_fish);
         return new ArrayList<>(Arrays.asList(cat, dog, hamster, parrot, rabbit, fish));
     }
 

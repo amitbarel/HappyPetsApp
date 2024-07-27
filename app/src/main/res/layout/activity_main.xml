@@ -15,14 +15,32 @@
         app:defaultNavHost="true"
         app:navGraph="@navigation/nav_graph" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
+    <nl.joery.animatedbottombar.AnimatedBottomBar
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:layout_alignParentBottom="true"
-        app:itemBackground="@color/black"
-        app:itemIconTint="@color/white"
-        app:itemTextColor="@color/white"
-        app:menu="@menu/bottom_nav_menu" />
+        app:abb_tabColor="@color/blue_grotto"
+        android:background="@color/royal_blue"
+        app:abb_indicatorLocation="bottom"
+        app:abb_rippleEnabled="true"
+        app:abb_rippleColor="@color/blue_grotto"
+        app:abb_indicatorAppearance="round"
+        app:abb_indicatorHeight="4dp"
+        app:abb_indicatorMargin="16dp"
+        app:abb_selectedIndex="0"
+        app:abb_selectedTabType="text"
+        app:abb_tabs="@menu/bottom_nav_menu" />
+
+
+    <!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
+    <!--        android:id="@+id/bottomNavigationView"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="70dp"-->
+    <!--        android:layout_alignParentBottom="true"-->
+    <!--        app:itemBackground="@color/royal_blue"-->
+    <!--        app:itemIconTint="@color/nav_item_color"-->
+    <!--        app:itemTextColor="@color/nav_item_color"-->
+    <!--        app:menu="@menu/bottom_nav_menu" />-->
 
 </RelativeLayout>

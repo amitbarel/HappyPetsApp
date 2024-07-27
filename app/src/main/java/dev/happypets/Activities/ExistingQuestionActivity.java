@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,20 +24,19 @@ import dev.happypets.Objects.Question;
 import dev.happypets.Objects.User;
 import dev.happypets.R;
 
-public class NewAnswerActivity extends AppCompatActivity {
+public class ExistingQuestionActivity extends AppCompatActivity {
 
     private DataManager dataManager;
     private MaterialTextView title, body, askedBy;
     private RecyclerView relatedAnswers;
-    private TextInputEditText answer;
-    private MaterialButton btnRespond;
+    private MaterialButton btn_add_answer;
     private ShapeableImageView back_arrow;
     private AnswerAdapter answerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_answer);
+        setContentView(R.layout.activity_existing_question);
 
         dataManager = DataManager.getInstance(this);
 
@@ -49,8 +49,7 @@ public class NewAnswerActivity extends AppCompatActivity {
         body = findViewById(R.id.actual_body);
         askedBy = findViewById(R.id.tv_username);
         relatedAnswers = findViewById(R.id.recycle_answers);
-        answer = findViewById(R.id.et_answer);
-        btnRespond = findViewById(R.id.btn_respond);
+        btn_add_answer = findViewById(R.id.btn_add_answer);
         back_arrow = findViewById(R.id.img_back_from_answer);
     }
 
@@ -86,53 +85,57 @@ public class NewAnswerActivity extends AppCompatActivity {
                     }
 
                     // Get answers for the question
-                    dataManager.getAnswersByQuestionId(chosenQuestionId, answers -> {
-                        runOnUiThread(() -> {
-                            if (answers != null && !answers.isEmpty()) {
-                                for (Answer ans : answers) {
-                                    Log.d("NewAnswerActivity", "Answer: " + ans.getText());
-                                }
-                                answerAdapter = new AnswerAdapter(NewAnswerActivity.this, answers);
-                                relatedAnswers.setAdapter(answerAdapter);
-                            } else {
-                                // Handle the case where no answers are found
-                                Toast.makeText(NewAnswerActivity.this, "No answers found for this question", Toast.LENGTH_SHORT).show();
+                    dataManager.getAnswersByQuestionId(chosenQuestionId, answers -> runOnUiThread(() -> {
+                        if (answers != null && !answers.isEmpty()) {
+                            for (Answer ans : answers) {
+                                Log.d("ExistingQuestionActivity", "Answer: " + ans.getText());
                             }
-                        });
-                    });
+                            answerAdapter = new AnswerAdapter(ExistingQuestionActivity.this, answers);
+                            relatedAnswers.setAdapter(answerAdapter);
+                        } else {
+                            // Handle the case where no answers are found
+                            Toast.makeText(ExistingQuestionActivity.this, "No answers found for this question", Toast.LENGTH_SHORT).show();
+                        }
+                    }));
 
-                    btnRespond.setOnClickListener(v -> {
-                        String newAnswerText = Objects.requireNonNull(answer.getText()).toString();
-                        if (!newAnswerText.isEmpty()) {
-                            Answer newAnswer = new Answer();
-                            newAnswer.setText(newAnswerText);
-                            dataManager.addNewAnswer(chosenQuestionId, newAnswer);
-                            Toast.makeText(NewAnswerActivity.this, "Answer added successfully", Toast.LENGTH_SHORT).show();
-                            // Clear input field
-                            answer.getText().clear();
-                            // Refresh answers after adding new answer
-                            dataManager.getAnswersByQuestionId(chosenQuestionId, answers -> {
-                                runOnUiThread(() -> {
+                    btn_add_answer.setOnClickListener(v -> {
+                        Dialog dialog = new Dialog(ExistingQuestionActivity.this);
+                        dialog.setContentView(R.layout.dialogue_answer);
+                        TextInputEditText ET_title = dialog.findViewById(R.id.ET_title);
+                        TextInputEditText ET_body = dialog.findViewById(R.id.ET_body);
+                        MaterialButton saveBTN = dialog.findViewById(R.id.BTN_save);
+
+                        saveBTN.setOnClickListener(v1 -> {
+                            String title = Objects.requireNonNull(ET_title.getText()).toString();
+                            String body = Objects.requireNonNull(ET_body.getText()).toString();
+                            if (!title.isEmpty() && !body.isEmpty()) {
+                                Answer newAnswer = new Answer();
+                                newAnswer.setTitle(title);
+                                newAnswer.setText(body);
+                                dataManager.addNewAnswer(chosenQuestionId, newAnswer);
+                                Toast.makeText(ExistingQuestionActivity.this, "Answer added successfully", Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                                dataManager.getAnswersByQuestionId(chosenQuestionId, answers -> runOnUiThread(() -> {
                                     if (answers != null && !answers.isEmpty()) {
-                                        answerAdapter = new AnswerAdapter(NewAnswerActivity.this, answers);
+                                        answerAdapter = new AnswerAdapter(ExistingQuestionActivity.this, answers);
                                         relatedAnswers.setAdapter(answerAdapter);
                                     }
-                                });
-                            });
-                        } else {
-                            Toast.makeText(NewAnswerActivity.this, "Please enter an answer", Toast.LENGTH_SHORT).show();
-                        }
+                                }));
+                                finish();
+                            }
+                        });
+                        dialog.setCancelable(true);
+                        dialog.show();
                     });
-
                 } else {
-                    Toast.makeText(NewAnswerActivity.this, "Question not found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ExistingQuestionActivity.this, "Question not found", Toast.LENGTH_SHORT).show();
                     finish();
                 }
             }
 
             @Override
             public void onError(Exception e) {
-                Toast.makeText(NewAnswerActivity.this, "Error fetching question: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(ExistingQuestionActivity.this, "Error fetching question: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 finish();
             }
         });

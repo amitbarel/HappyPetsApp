@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="350dp"
+    android:layout_height="300dp"
+    android:background="@drawable/grad_bg"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/TIL_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        style="@style/CustomTextInputLayout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/ET_title"
+            style="@style/CustomTextInputEditText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
+            android:hint="Title"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/TIL_body"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_below="@id/TIL_title"
+        android:layout_marginBottom="10dp"
+        style="@style/CustomTextInputLayout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/ET_body"
+            style="@style/CustomTextInputEditText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:hint="Body"
+            android:inputType="textMultiLine"
+            android:maxLines="5"
+            android:minLines="1" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/BTN_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/TIL_body"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/logo_color"
+        android:text="Save"
+        android:textColor="@color/white" />
+
+</RelativeLayout>

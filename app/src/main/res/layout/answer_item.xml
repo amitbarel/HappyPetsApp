@@ -12,7 +12,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="72dp"
-        android:background="@color/gray_bg">
+        android:background="@drawable/grad_bg">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/txt_answer_body"

@@ -41,7 +41,7 @@ public class SignUpActivity extends AppCompatActivity {
     private TextInputEditText user_name, user_email, user_password, pet_name;
     private Spinner spinner_pet_type;
     private MaterialButton btn_signup, btn_vet_upload_license, btn_upload_pet_photo;
-    private RadioGroup rg_user_type;
+    private RadioGroup rg_type;
     private String imageUrl;
     private Uri imageUri;
     private Uri vetImageUri;
@@ -59,7 +59,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void findViews() {
         backBTN = findViewById(R.id.BTN_back);
-        rg_user_type = findViewById(R.id.rg_type);
+        rg_type = findViewById(R.id.rg_type);
         vet_name = findViewById(R.id.ET_vet_name);
         vet_email = findViewById(R.id.ET_vet_email);
         vet_phone = findViewById(R.id.et_vet_phone);
@@ -79,13 +79,15 @@ public class SignUpActivity extends AppCompatActivity {
     private void initViews() {
         mDatabase = FirebaseDatabase.getInstance();
         backBTN.setOnClickListener(v -> finish());
-        rg_user_type.setOnCheckedChangeListener((group, checkedId) -> {
+        rg_type.setOnCheckedChangeListener((group, checkedId) -> {
+            View layoutUser = findViewById(R.id.layout_regular_user);
+            View layoutVet = findViewById(R.id.layout_vet);
             if (checkedId == R.id.rb_veterinarian) {
-                findViewById(R.id.layout_vet).setVisibility(View.VISIBLE);
-                findViewById(R.id.layout_regular_user).setVisibility(View.GONE);
+                layoutUser.setVisibility(View.GONE);
+                layoutVet.setVisibility(View.VISIBLE);
             } else if (checkedId == R.id.rb_regular_user) {
-                findViewById(R.id.layout_vet).setVisibility(View.GONE);
-                findViewById(R.id.layout_regular_user).setVisibility(View.VISIBLE);
+                layoutVet.setVisibility(View.GONE);
+                layoutUser.setVisibility(View.VISIBLE);
             }
         });
 
@@ -95,7 +97,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void generalSignUp() {
-        int selectedUserType = rg_user_type.getCheckedRadioButtonId();
+        int selectedUserType = rg_type.getCheckedRadioButtonId();
         if (selectedUserType == R.id.rb_veterinarian) {
             vetSignUp();
         } else if (selectedUserType == R.id.rb_regular_user) {
@@ -234,13 +236,6 @@ public class SignUpActivity extends AppCompatActivity {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
-
-//    private void openFileChooserForVet() {
-//        Intent intent = new Intent();
-//        intent.setType("image/*");
-//        intent.setAction(Intent.ACTION_GET_CONTENT);
-//        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST_VET);
-//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

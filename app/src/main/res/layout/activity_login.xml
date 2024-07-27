@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/app_bg_color"
     tools:context=".Activities.LoginActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="60dp"
         android:layout_centerHorizontal="true"
+        android:layout_margin="40dp"
         android:orientation="vertical">
 
         <com.google.android.material.imageview.ShapeableImageView
@@ -19,38 +19,39 @@
             android:layout_height="250dp"
             android:layout_gravity="center"
             android:layout_marginBottom="20dp"
-            android:src="@drawable/ic_logo"/>
+            android:src="@drawable/logo_blue" />
 
         <com.google.android.material.textfield.TextInputLayout
+            style="@style/CustomTextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email address:"
-            app:hintTextColor="@color/black"
             android:layout_marginBottom="20dp"
-            android:inputType="textEmailAddress">
+            android:hint="Email address:"
+            android:inputType="textEmailAddress"
+            app:hintTextColor="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            style="@style/CustomTextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Password:"
-            app:hintTextColor="@color/black"
             android:layout_marginBottom="20dp"
-            android:inputType="textPassword">
+            android:hint="Password:"
+            android:inputType="textPassword"
+            app:hintTextColor="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
-                android:hint="Password"
                 android:textColor="@color/black" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -60,24 +61,17 @@
             android:id="@+id/btn_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/logo_color"
             android:text="Login"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/logo_color"/>
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn"
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:backgroundTint="@color/app_bg_color"/>
+            android:textColor="@color/white" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_signUp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
+            android:backgroundTint="@color/logo_color"
             android:text="Sign Up"
-            android:backgroundTint="@color/logo_color"/>
-
-
+            android:textColor="@color/white" />
 
 
     </LinearLayout>

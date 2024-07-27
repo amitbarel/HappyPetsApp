@@ -1,45 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_bg_color"
-    tools:context=".Activities.NewAnswerActivity">
+    tools:context=".Activities.ExistingQuestionActivity">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/img_back_from_answer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
-        android:src="@drawable/arrow_back_24"/>
+        android:src="@drawable/arrow_back_24" />
 
     <LinearLayout
         android:id="@+id/chosen_question"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30dp"
         android:layout_marginTop="50dp"
-        android:layout_marginHorizontal="40dp"
+        android:background="@drawable/grad_bg"
         android:orientation="vertical"
-        android:padding="10dp"
-        android:background="@color/gray_bg">
+        android:padding="10dp">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/actual_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Title"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/actual_body"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:padding="4dp"
             android:gravity="start"
-            android:textSize="15sp"
             android:maxLines="6"
-            android:text="Body"/>
+            android:padding="4dp"
+            android:text="Body"
+            android:textSize="15sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -51,16 +50,16 @@
                 android:layout_width="72dp"
                 android:layout_height="72dp"
                 android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"/>
+                android:layout_centerVertical="true" />
 
             <View
                 android:layout_width="75dp"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="Asked by:"/>
+                android:text="Asked by:" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_username"
@@ -76,35 +75,23 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycle_answers"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/chosen_question"
+        android:layout_marginHorizontal="30dp"
         android:layout_marginTop="8dp"
-        android:layout_marginHorizontal="40dp"
+        android:layout_marginBottom="70dp"
         android:background="@color/white"
         android:orientation="vertical"
-        tools:listitem="@layout/answer_item"
-        android:layout_below="@id/chosen_question"/>
-
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/et_answer"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginHorizontal="40dp"
-        android:background="@color/white"
-        android:padding="4dp"
-        android:gravity="start"
-        android:hint="Answer here"
-        android:layout_below="@id/recycle_answers"/>
+        tools:listitem="@layout/answer_item" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_respond"
+        android:id="@+id/btn_add_answer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
         android:backgroundTint="@color/logo_color"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="40dp"
-        android:text="Respond"
-        android:layout_below="@id/et_answer"/>
+        android:text="Add answer"/>
 
 </RelativeLayout>

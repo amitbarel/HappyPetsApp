@@ -15,7 +15,7 @@ import com.google.android.material.textview.MaterialTextView;
 
 import java.util.ArrayList;
 
-import dev.happypets.Activities.NewAnswerActivity;
+import dev.happypets.Activities.ExistingQuestionActivity;
 import dev.happypets.Objects.Question;
 import dev.happypets.CallBacks.QuestionCallBack;
 import dev.happypets.R;
@@ -49,7 +49,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Quseti
             favorite.setOnClickListener(v->{
                 int position = getAdapterPosition();
                 Question question = questions.get(position);
-                question.setFavorite(!question.isFavorite());
+//                question.setFavorite(!question.isFavorite());
                 notifyItemChanged(position);
                 questionCallBack.favoriteClicked(question, position);
             });
@@ -58,7 +58,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Quseti
                 int position = getAdapterPosition();
                 Question question = questions.get(position);
                 if (question.getQuestionId() != null) {
-                    Intent intent = new Intent(context, NewAnswerActivity.class);
+                    Intent intent = new Intent(context, ExistingQuestionActivity.class);
                     intent.putExtra("question_id", question.getQuestionId());
                     context.startActivity(intent);
                 } else {
@@ -85,7 +85,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Quseti
             holder.numberOfAnswers.setText(String.valueOf(question.getRelatedAnswers().size()));
         }
         holder.questionTime.setText(question.getAskedTime());
-        holder.favorite.setImageResource(question.isFavorite() ? R.drawable.fill_heart : R.drawable.heart_thin);
+//        holder.favorite.setImageResource(question.isFavorite() ? R.drawable.fill_heart : R.drawable.heart_thin);
     }
 
     @Override

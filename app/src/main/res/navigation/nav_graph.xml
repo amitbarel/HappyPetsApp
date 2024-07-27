@@ -25,11 +25,4 @@
             app:argType="string" />
     </fragment>
 
-    <fragment
-        android:id="@+id/profileFragment"
-        android:name="dev.happypets.Fragments.ProfileFragment"
-        android:label="Profile"
-        tools:layout="@layout/fragment_profile">
-    </fragment>
-
 </navigation>

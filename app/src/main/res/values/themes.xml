@@ -6,11 +6,11 @@
     </style>
 
     <style name="CustomTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="boxBackgroundColor">@color/app_bg_color</item>
-        <item name="boxStrokeColor">@color/black</item>
-        <item name="hintTextColor">@color/black</item>
-        <item name="helperTextTextColor">@color/black</item>
-        <item name="errorTextColor">@color/black</item>
+        <item name="boxBackgroundColor">@color/white</item>
+        <item name="boxStrokeColor">@color/royal_blue</item>
+        <item name="hintTextColor">@color/royal_blue</item>
+        <item name="helperTextTextColor">@color/royal_blue</item>
+        <item name="errorTextColor">#FF0000</item>
         <item name="counterTextColor">@color/black</item>
         <item name="placeholderTextColor">@color/black</item>
     </style>

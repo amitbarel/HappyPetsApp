@@ -4,56 +4,61 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_bg_color"
-    tools:context=".Fragments.ProfileFragment" >
+    tools:context=".Fragments.ProfileFragment">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/header_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:text="My Pets"
         android:textColor="@color/black"
-        android:text="My Pets"/>
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/my_pets"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="99dp"
-        android:layout_marginTop="6dp"
-        tools:listitem="layout/pet_item"
+        android:layout_below="@id/header_profile"
         android:layout_marginHorizontal="30dp"
+        android:layout_marginTop="6dp"
         android:background="@color/gray_bg"
-        android:layout_below="@id/header_profile"/>
+        android:orientation="horizontal"
+        tools:listitem="@layout/pet_item" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_update"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Update Profile"
-        android:layout_marginTop="18dp"
+        android:layout_below="@id/my_pets"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"
         android:backgroundTint="@color/logo_color"
-        android:layout_below="@id/my_pets"/>
+        android:text="Update Profile" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/header_questions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
-        android:layout_centerHorizontal="true"
         android:layout_below="@id/btn_update"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"
+        android:layout_marginBottom="8dp"
+        android:text="My Questions"
         android:textColor="@color/black"
-        android:text="My Questions"/>
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/my_questions"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/header_questions"
+        android:layout_marginHorizontal="30dp"
         android:layout_marginBottom="78dp"
         android:orientation="vertical"
-        android:layout_marginHorizontal="30dp"
-        tools:listitem="@layout/question_item"
-        android:layout_below="@id/header_questions"/>
+        tools:listitem="@layout/question_item" />
 
 </RelativeLayout>

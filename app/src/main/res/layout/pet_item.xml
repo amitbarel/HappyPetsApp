@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="111dp"
+    android:layout_width="110dp"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="8dp"
     android:layout_marginVertical="16dp"
     android:padding="0dp"
-    app:cardElevation="6dp"
-    app:cardCornerRadius="12dp">
+    app:cardCornerRadius="12dp"
+    app:cardElevation="6dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -17,33 +17,35 @@
             android:id="@+id/pet_image"
             android:layout_width="match_parent"
             android:layout_height="111dp"
+            android:background="@color/white"
+            android:padding="12dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/dog_image"/>
+            android:src="@drawable/dog" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/pet_image"
-            android:orientation="vertical"
-            android:background="@color/gray_bg">
+            android:background="@drawable/grad_bg"
+            android:orientation="vertical">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/pet_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="pet name"
                 android:gravity="center_horizontal"
                 android:padding="4dp"
-                android:textColor="@android:color/black"/>
+                android:text="pet name"
+                android:textColor="@android:color/black" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/pet_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="pet type"
                 android:gravity="center_horizontal"
                 android:padding="4dp"
-                android:textColor="@android:color/black"/>
+                android:text="pet type"
+                android:textColor="@android:color/black" />
         </LinearLayout>
     </RelativeLayout>
 </com.google.android.material.card.MaterialCardView>
