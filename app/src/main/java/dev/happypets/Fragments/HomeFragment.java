@@ -17,6 +17,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import dev.happypets.Adapters.GridAdapter;
 import dev.happypets.Adapters.PetImgAdapter;
@@ -66,14 +67,49 @@ public class HomeFragment extends Fragment {
 
     }
 
+//    private void fetchCurrentUser() {
+//        dataManager.getCurrentUserName(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if (dataSnapshot.exists()) {
+//                    currentUser = dataSnapshot.getValue(User.class);
+//                    if (currentUser != null) {
+//                        welcomeMSG.setText(welcomeMSG.getText().toString().concat(" " + currentUser.getName()));
+//                    } else {
+//                        welcomeMSG.setText(welcomeMSG.getText().toString().concat(" Unknown User"));
+//                    }
+//                } else {
+//                    welcomeMSG.setText(welcomeMSG.getText().toString().concat(" Unknown User"));
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                Log.d("NewQuestionActivity", "Failed to read user data", databaseError.toException());
+//            }
+//        });
+//    }
+
     private void fetchCurrentUser() {
         dataManager.getCurrentUserName(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    currentUser = dataSnapshot.getValue(User.class);
-                    if (currentUser != null) {
-                        welcomeMSG.setText(welcomeMSG.getText().toString().concat(" " + currentUser.getName()));
+                    // Assuming the structure of the dataSnapshot is a HashMap
+                    HashMap<String, Object> userMap = (HashMap<String, Object>) dataSnapshot.getValue();
+                    if (userMap != null) {
+                        // Convert the HashMap to a User object
+                        currentUser = new User(
+                                (String) userMap.get("name"),
+                                (String) userMap.get("email"),
+                                (String) userMap.get("password"),
+                                null
+                        );
+                        if (currentUser != null) {
+                            welcomeMSG.setText(welcomeMSG.getText().toString().concat(" " + currentUser.getName()));
+                        } else {
+                            welcomeMSG.setText(welcomeMSG.getText().toString().concat(" Unknown User"));
+                        }
                     } else {
                         welcomeMSG.setText(welcomeMSG.getText().toString().concat(" Unknown User"));
                     }
@@ -88,6 +124,7 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+
 }
 
 

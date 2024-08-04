@@ -1,13 +1,15 @@
 package dev.happypets.Objects;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class User {
     private String name;
     private String email;
     private String password;
     private ArrayList<Pet> pets;
-    private ArrayList<Question> favoriteQuestions;
+    private Map <String, Question> favoriteQuestions;
 
     // Default constructor required for calls to DataSnapshot.getValue(User.class)
     public User() {
@@ -19,8 +21,7 @@ public class User {
         this.password = password;
         this.pets = new ArrayList<>();
         this.pets.add(pet);
-        this.favoriteQuestions = new ArrayList<>();
-
+        this.favoriteQuestions = new HashMap<>();
     }
 
 
@@ -64,11 +65,11 @@ public class User {
         return pets;
     }
 
-    public ArrayList<Question> getFavoriteQuestions() {
+    public Map<String, Question> getFavoriteQuestions() {
         return favoriteQuestions;
     }
 
     public void addToFavoriteQuestions(Question question) {
-        this.favoriteQuestions.add(question);
+        this.favoriteQuestions.put(question.getQuestionId(), question);
     }
 }

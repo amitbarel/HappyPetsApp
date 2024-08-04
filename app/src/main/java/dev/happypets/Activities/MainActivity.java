@@ -65,21 +65,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-//        bottomNavigationView.setOnItemSelectedListener(item -> {
-//            int itemId = item.getItemId();
-//            if (itemId == R.id.home) {
-//                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, homeFragment).commit();
-//                return true;
-//            } else if (itemId == R.id.qa) {
-//                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, qaFragment).commit();
-//                return true;
-//            } else if (itemId == R.id.profile) {
-//                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, profileFragment).commit();
-//                return true;
-//            }
-//            return false;
-//        });
     }
 
     private void readFromDatabase() {

@@ -62,6 +62,10 @@ public class DataManager {
         return new ArrayList<>(Arrays.asList(cat, dog, hamster, parrot, rabbit, fish));
     }
 
+    public String getCurrentUserId() {
+        return this.currentUser.getUid();
+    }
+
     public ArrayList<Question> getQuestions() {
         return questions;
     }
@@ -102,6 +106,27 @@ public class DataManager {
         });
     }
 
+
+    public void getFavoriteQuestions(String uID, final OnQuestionsRetrievedListener listener) {
+        ArrayList<Question> favoriteQuestions = new ArrayList<>();
+        DatabaseReference favoritesRef = firebaseDatabase.getReference("Users").child(uID).child("favoriteQuestions");
+        favoritesRef.get().addOnSuccessListener(dataSnapshot -> {
+            if (dataSnapshot.exists()) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Question question = snapshot.getValue(Question.class);
+                    if (question != null) {
+                        favoriteQuestions.add(question);
+                    }
+                }
+            }
+            listener.onQuestionsRetrieved(favoriteQuestions);
+        }).addOnFailureListener(e -> {
+            // Handle potential errors here
+            Log.e("DataManager", "Failed to get favorite questions", e);
+            listener.onQuestionsRetrieved(favoriteQuestions);
+        });
+    }
+
     public void getQuestionsByEmail(String email, final OnQuestionsRetrievedListener listener) {
         ArrayList<Question> myQuestions = new ArrayList<>();
         questionsRef.get().addOnSuccessListener(dataSnapshot -> {
@@ -115,7 +140,8 @@ public class DataManager {
         });
     }
 
-    public void getQuestionsByCategory(String category, final OnQuestionsRetrievedListener listener) {
+    public void getQuestionsByCategory(String category,
+                                       final OnQuestionsRetrievedListener listener) {
         ArrayList<Question> relatedQuestions = new ArrayList<>();
         questionsRef.orderByChild("category").equalTo(category).get().addOnSuccessListener(dataSnapshot -> {
             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -220,6 +246,31 @@ public class DataManager {
         }
     }
 
+    public void addFavoriteQuestion(String userId, Question question, Runnable onComplete) {
+        DatabaseReference favoritesRef = firebaseDatabase.getReference("Users").child(userId).child("favoriteQuestions");
+        favoritesRef.child(question.getQuestionId()).setValue(question).addOnCompleteListener(task -> onComplete.run());
+    }
+
+    public void removeFavoriteQuestion(String userId, Question question, Runnable onComplete) {
+        DatabaseReference favoritesRef = firebaseDatabase.getReference("Users").child(userId).child("favoriteQuestions");
+        favoritesRef.child(question.getQuestionId()).removeValue().addOnCompleteListener(task -> onComplete.run());
+    }
+
+    public void isQuestionInFavorites(String userId, Question question, OnBooleanResultListener listener) {
+        DatabaseReference favoritesRef = firebaseDatabase.getReference("Users").child(userId).child("favoriteQuestions");
+        favoritesRef.child(question.getQuestionId()).get().addOnSuccessListener(dataSnapshot -> {
+            listener.onResult(dataSnapshot.exists());
+        }).addOnFailureListener(e -> {
+            Log.e("DataManager", "Failed to check if question is in favorites", e);
+            listener.onResult(false);
+        });
+    }
+
+    public void listenForFavoriteQuestions(String userId, ValueEventListener listener) {
+        DatabaseReference favoritesRef = firebaseDatabase.getReference("Users").child(userId).child("favoriteQuestions");
+        favoritesRef.addValueEventListener(listener);
+    }
+
     public interface OnQuestionsRetrievedListener {
         void onQuestionsRetrieved(ArrayList<Question> questions);
     }
@@ -228,5 +279,9 @@ public class DataManager {
         void onQuestionRetrieved(Question question);
 
         void onError(Exception e);
+    }
+
+    public interface OnBooleanResultListener {
+        void onResult(boolean isInFavorites);
     }
 }
