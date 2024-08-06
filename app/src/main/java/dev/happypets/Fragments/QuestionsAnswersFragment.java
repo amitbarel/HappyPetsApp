@@ -195,5 +195,19 @@ public class QuestionsAnswersFragment extends Fragment {
                 Log.d("NewQuestionActivity", "Failed to read user data", databaseError.toException());
             }
         });
+
+        favQuestions.setOnClickListener(v -> {
+            if (currentUser != null) {
+                String userEmail = currentUser.getEmail();
+                dataManager.getFavoriteQuestions(userEmail, favoriteQuestions -> {
+                    if (favoriteQuestions == null || favoriteQuestions.isEmpty()) {
+                        Toast.makeText(getContext(), "No favorite questions found", Toast.LENGTH_SHORT).show();
+                    } else {
+                        setupAdapter(favoriteQuestions);
+                    }
+                });
+            }
+        });
+
     }
 }

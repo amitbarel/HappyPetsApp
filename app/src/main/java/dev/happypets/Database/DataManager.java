@@ -130,25 +130,32 @@ public class DataManager {
     }
 
 
-    public void getFavoriteQuestions(String uID, final OnQuestionsRetrievedListener listener) {
+    public void getFavoriteQuestions(String email, final OnQuestionsRetrievedListener listener) {
         ArrayList<Question> favoriteQuestions = new ArrayList<>();
-        DatabaseReference favoritesRef = firebaseDatabase.getReference("Users").child(uID).child("favoriteQuestions");
-        favoritesRef.get().addOnSuccessListener(dataSnapshot -> {
-            if (dataSnapshot.exists()) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Question question = snapshot.getValue(Question.class);
-                    if (question != null) {
-                        favoriteQuestions.add(question);
+        DatabaseReference favoritesRef = firebaseDatabase.getReference("Users");
+        favoritesRef.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    DataSnapshot favoritesSnapshot = userSnapshot.child("favoriteQuestions");
+                    for (DataSnapshot snapshot : favoritesSnapshot.getChildren()) {
+                        Question question = snapshot.getValue(Question.class);
+                        if (question != null) {
+                            favoriteQuestions.add(question);
+                        }
                     }
                 }
+                listener.onQuestionsRetrieved(favoriteQuestions);
             }
-            listener.onQuestionsRetrieved(favoriteQuestions);
-        }).addOnFailureListener(e -> {
-            // Handle potential errors here
-            Log.e("DataManager", "Failed to get favorite questions", e);
-            listener.onQuestionsRetrieved(favoriteQuestions);
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("DataManager", "Failed to get favorite questions", databaseError.toException());
+                listener.onQuestionsRetrieved(favoriteQuestions);
+            }
         });
     }
+
 
     public void getQuestionsByEmail(String email, final OnQuestionsRetrievedListener listener) {
         ArrayList<Question> myQuestions = new ArrayList<>();
