@@ -146,4 +146,9 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
         this.questions.addAll(newQuestions);
         notifyDataSetChanged();
     }
+
+    public void addQuestion(Question question) {
+        questions.add(0, question); // Add the new question at the top
+        notifyItemInserted(0); // Notify that a new item is inserted at position 0
+    }
 }

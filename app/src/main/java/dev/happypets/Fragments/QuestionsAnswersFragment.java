@@ -26,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 import dev.happypets.Adapters.QuestionAdapter;
 import dev.happypets.CallBacks.QuestionCallBack;
@@ -66,9 +67,36 @@ public class QuestionsAnswersFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_questions_answers, container, false);
         dataManager = DataManager.getInstance(getContext());
         findViews(view);
+        setRecyclerView();
         initViews();
         fetchCurrentUser();
         return view;
+    }
+
+    private void setRecyclerView() {
+        recyclerQuestions.setLayoutManager(new LinearLayoutManager(getContext()));
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            String specificAnimal = arguments.getString("kind");
+            Log.d("Fragment", "Arguments received with kind: " + specificAnimal);
+            if (specificAnimal != null) {
+                dataManager.getQuestionsByCategory(specificAnimal, specificQuestions -> {
+                    if (specificQuestions == null || ((List<Question>) specificQuestions).isEmpty()) {
+                        Toast.makeText(getContext(), "No questions found", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Log.d("Questions", specificQuestions.toString());
+                    }
+                    setupAdapter((List<Question>) specificQuestions);
+                });
+            } else {
+                Log.d("Fragment", "Specific animal is null");
+            }
+        } else {
+            Log.d("Fragment", "Arguments are null, loading all questions");
+            dataManager.getQuestions(allQuestions -> {
+                setupAdapter(allQuestions);
+            });
+        }
     }
 
     private void initViews() {
@@ -86,78 +114,64 @@ public class QuestionsAnswersFragment extends Fragment {
             }
         });
 
-        recyclerQuestions.setLayoutManager(new LinearLayoutManager(getContext()));
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            String specificAnimal = arguments.getString("kind");
-            if (specificAnimal != null) {
-                dataManager.getQuestionsByCategory(specificAnimal, specificQuestions -> {
-                    if (specificQuestions.isEmpty()) {
-                        Toast.makeText(getContext(), "No questions found", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Log.d("Questions", specificQuestions.toString());
-                    }
-                    questionList = new ArrayList<>(specificQuestions);
-                    setupAdapter(questionList);
-                });
-            }
-        } else {
-            questionList = new ArrayList<>(dataManager.getQuestions());
-            setupAdapter(questionList);
-        }
-
-        newQuestion.setOnClickListener(v -> {
-            Dialog dialog = new Dialog(getContext());
-            dialog.setContentView(R.layout.dialogue_question);
-            TextInputEditText title = dialog.findViewById(R.id.question_title);
-            TextInputEditText body = dialog.findViewById(R.id.question_body);
-            Spinner animalKind = dialog.findViewById(R.id.spinner_animal);
-            MaterialButton publishButton = dialog.findViewById(R.id.btn_publish);
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                    getContext(),
-                    android.R.layout.simple_spinner_item,
-                    dataManager.getAnimalNames());
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            animalKind.setAdapter(adapter);
-            publishButton.setOnClickListener(v1 -> {
-                if (currentUser != null) {
-                    Question newQuestion = new Question()
-                            .setTitle(title.getText().toString())
-                            .setText(body.getText().toString())
-                            .setAskedTime(ZonedDateTime.now(ZoneId.of("Asia/Jerusalem")).toLocalTime().toString())
-                            .setCategory(animalKind.getSelectedItem().toString())
-                            .setAskedBy(currentUser);
-                    dataManager.addNewQuestion(newQuestion);
-                    dialog.dismiss();
-                }
-            });
-            dialog.setCancelable(true);
-            dialog.show();
-        });
+        newQuestion.setOnClickListener(v -> popUpDialog());
     }
 
-    private void setupAdapter(ArrayList<Question> questions) {
-        if (questionAdapter == null) {
-            questionAdapter = new QuestionAdapter(getContext(), questions, questionCallBack);
-            recyclerQuestions.setAdapter(questionAdapter);
+    private void popUpDialog() {
+        Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.dialogue_question);
+        TextInputEditText title = dialog.findViewById(R.id.question_title);
+        TextInputEditText body = dialog.findViewById(R.id.question_body);
+        Spinner animalKind = dialog.findViewById(R.id.spinner_animal);
+        MaterialButton publishButton = dialog.findViewById(R.id.btn_publish);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                getContext(),
+                android.R.layout.simple_spinner_item,
+                dataManager.getAnimalNames());
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        animalKind.setAdapter(adapter);
+        publishButton.setOnClickListener(v1 -> {
+            if (currentUser != null) {
+                Question newQuestion = new Question()
+                        .setTitle(title.getText().toString())
+                        .setText(body.getText().toString())
+                        .setAskedTime(ZonedDateTime.now(ZoneId.of("Asia/Jerusalem")).toLocalTime().toString().substring(0,5))
+                        .setCategory(animalKind.getSelectedItem().toString())
+                        .setAskedBy(currentUser);
+                dataManager.addNewQuestion(newQuestion, question -> {
+                    // Update the RecyclerView here
+                    ((QuestionAdapter) recyclerQuestions.getAdapter()).addQuestion(question);
+                    recyclerQuestions.scrollToPosition(0); // Scroll to the top to show the new question
+                });
+                dialog.dismiss();
+            }
+        });
+        dialog.setCancelable(true);
+        dialog.show();
+    }
+
+    private void setupAdapter(List<Question> questions) {
+        if (recyclerQuestions.getAdapter() == null) {
+            recyclerQuestions.setAdapter(new QuestionAdapter(getContext(), new ArrayList<>(questions), questionCallBack));
         } else {
-            questionAdapter.updateQuestions(questions);
-            questionAdapter.notifyDataSetChanged();
+            ((QuestionAdapter) recyclerQuestions.getAdapter()).updateQuestions(new ArrayList<>(questions));
         }
     }
 
     private void filterList(String text) {
-        ArrayList<Question> filteredList = new ArrayList<>();
-        for (Question question : dataManager.getQuestions()) {
-            if (question.getTitle().toLowerCase().contains(text.toLowerCase())) {
-                filteredList.add(question);
+        dataManager.getQuestions(allQuestions -> {
+            ArrayList<Question> filteredList = new ArrayList<>();
+            for (Question question : allQuestions) {
+                if (question.getTitle().toLowerCase().contains(text.toLowerCase())) {
+                    filteredList.add(question);
+                }
             }
-        }
-        if (filteredList.isEmpty()) {
-            Toast.makeText(getContext(), "No questions found", Toast.LENGTH_SHORT).show();
-        } else {
-            setupAdapter(filteredList);
-        }
+            if (filteredList.isEmpty()) {
+                Toast.makeText(getContext(), "No questions found", Toast.LENGTH_SHORT).show();
+            } else {
+                setupAdapter(filteredList);
+            }
+        });
     }
 
     private void findViews(View view) {

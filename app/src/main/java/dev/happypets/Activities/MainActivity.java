@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         final ArrayList<Question> questions = new ArrayList<>();
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("questions");
+        DatabaseReference ref = database.getReference("Questions");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

@@ -15,6 +15,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import dev.happypets.CallBacks.AnswerCallback;
@@ -37,7 +39,7 @@ public class DataManager {
 
     public DataManager(Context context) {
         this.firebaseDatabase = FirebaseDatabase.getInstance();
-        this.questionsRef = firebaseDatabase.getReference("questions");
+        this.questionsRef = firebaseDatabase.getReference("Questions");
         this.questions = new ArrayList<>();
         this.animalTypes = getAnimalTypes();
         this.firebaseAuth = FirebaseAuth.getInstance();
@@ -66,8 +68,22 @@ public class DataManager {
         return this.currentUser.getUid();
     }
 
-    public ArrayList<Question> getQuestions() {
-        return questions;
+    public void getQuestions(OnDataChangeCallback<List<Question>> callback) {
+        questionsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<Question> questions = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    questions.add(snapshot.getValue(Question.class));
+                }
+                callback.onDataChange(questions);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                callback.onDataChange(Collections.emptyList());
+            }
+        });
     }
 
     public DataManager setAnimalTypes(ArrayList<AnimalType> animalTypes) {
@@ -79,11 +95,18 @@ public class DataManager {
         this.questions = questions;
     }
 
-    public void addNewQuestion(Question question) {
+    public void addNewQuestion(Question question, OnQuestionAddedCallback callback) {
         String questionId = questionsRef.push().getKey();
         if (questionId != null) {
             question.setQuestionId(questionId);
-            questionsRef.child(questionId).setValue(question);
+            questionsRef.child(questionId).setValue(question)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            callback.onQuestionAdded(question);
+                        } else {
+                            Log.d("Error", "Failed to add question");
+                        }
+                    });
         } else {
             Log.d("Error", "Question id is null");
         }
@@ -141,14 +164,22 @@ public class DataManager {
     }
 
     public void getQuestionsByCategory(String category,
-                                       final OnQuestionsRetrievedListener listener) {
-        ArrayList<Question> relatedQuestions = new ArrayList<>();
-        questionsRef.orderByChild("category").equalTo(category).get().addOnSuccessListener(dataSnapshot -> {
-            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                Question question = getQuestion(snapshot);
-                relatedQuestions.add(question);
+                                       final OnDataChangeCallback listener) {
+        questionsRef.orderByChild("category").equalTo(category)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Question> relatedQuestions = new ArrayList<>();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    relatedQuestions.add(dataSnapshot.getValue(Question.class));
+                }
+                listener.onDataChange(relatedQuestions);
             }
-            listener.onQuestionsRetrieved(relatedQuestions);
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                listener.onDataChange(Collections.emptyList());
+            }
         });
     }
 
@@ -239,7 +270,7 @@ public class DataManager {
 
     public void getCurrentUserPets(ValueEventListener listener) {
         if (currentUser != null) {
-            DatabaseReference petsRef = firebaseDatabase.getReference("users").child(currentUser.getUid()).child("pet");
+            DatabaseReference petsRef = firebaseDatabase.getReference("Users").child(currentUser.getUid()).child("pet");
             petsRef.addListenerForSingleValueEvent(listener);
         } else {
             Log.e("DataManager", "Current user is null");
@@ -283,5 +314,13 @@ public class DataManager {
 
     public interface OnBooleanResultListener {
         void onResult(boolean isInFavorites);
+    }
+
+    public interface OnDataChangeCallback<T> {
+        void onDataChange(T data);
+    }
+
+    public interface OnQuestionAddedCallback {
+        void onQuestionAdded(Question question);
     }
 }

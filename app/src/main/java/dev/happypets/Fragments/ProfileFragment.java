@@ -82,31 +82,38 @@ public class ProfileFragment extends Fragment {
     }
 
     private void fetchCurrentUser() {
-        // Fetch current user's name from Firebase
         dataManager.getCurrentUserName(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     currentUser = dataSnapshot.getValue(User.class);
                     if (currentUser != null) {
-                        Log.d("Email", currentUser.getEmail());
-                        // Fetch questions posted by the current user
-                        dataManager.getQuestionsByEmail(currentUser.getEmail(), questions -> {
-                            if (questions != null) {
-                                myQuestions.clear();
-                                myQuestions.addAll(questions);
-                                questionAdapter.notifyDataSetChanged();
-                            }
-                        });
-                        // Fetch pets belonging to the current user
+                        Log.d("ProfileFragment", "User email: " + currentUser.getEmail());
+                        fetchUserQuestions(currentUser.getEmail());
                         fetchUserPets();
+                    } else {
+                        Log.d("ProfileFragment", "Current user is null");
                     }
+                } else {
+                    Log.d("ProfileFragment", "No user data exists");
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.d("ProfileFragment", "Failed to read user data", databaseError.toException());
+            }
+        });
+    }
+
+    private void fetchUserQuestions(String email) {
+        dataManager.getQuestionsByEmail(email, questions -> {
+            if (questions != null) {
+                myQuestions.clear();
+                myQuestions.addAll(questions);
+                questionAdapter.notifyDataSetChanged();
+            } else {
+                Log.d("ProfileFragment", "No questions found for user");
             }
         });
     }
@@ -119,10 +126,16 @@ public class ProfileFragment extends Fragment {
                 if (dataSnapshot.exists()) {
                     myPets.clear();
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        Pet pet = snapshot.getValue(Pet.class);
-                        if (pet != null) {
-                            Log.d("ProfileFragment", "Pet name: " + pet.getName());
-                            myPets.add(pet);
+                        try {
+                            Pet pet = snapshot.getValue(Pet.class);
+                            if (pet != null) {
+                                Log.d("ProfileFragment", "Pet name: " + pet.getName());
+                                myPets.add(pet);
+                            } else {
+                                Log.d("ProfileFragment", "Pet data is null");
+                            }
+                        } catch (Exception e) {
+                            Log.e("ProfileFragment", "Error deserializing pet", e);
                         }
                     }
                     petAdapter.notifyDataSetChanged();
