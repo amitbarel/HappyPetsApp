@@ -4,6 +4,7 @@ public class AnimalType {
     private String kind;
     private int imageSrc;
 
+    public AnimalType() {}
     public AnimalType(String kind, int imageSrc) {
         this.kind = kind;
         this.imageSrc = imageSrc;

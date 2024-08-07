@@ -16,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
+import org.json.JSONArray;
+
 public class PetAdapter extends RecyclerView.Adapter<PetAdapter.PetViewHolder> {
 
     private Context context;
@@ -35,15 +37,12 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.PetViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull PetViewHolder holder, int position) {
-        Pet pet = pets.get(position);
-        holder.petName.setText(pet.getName());
-        if (pet.getType() != null) {
-            holder.petType.setText(pet.getType().getKind());
-        } else {
-            holder.petType.setText("Unknown");
-        }
+
+        holder.petName.setText(pets.get(position).getName());
+        holder.petType.setText(pets.get(position).getType().getKind());
+
         Glide.with(context)
-                .load(pet.getPhotoUrl())
+                .load(pets.get(position).getPhotoUrl())
                 .into(holder.petImage);
     }
 

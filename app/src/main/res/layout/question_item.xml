@@ -53,7 +53,7 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/txt_questionTitle"
-                android:layout_width="wrap_content"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:textAllCaps="true"
                 android:textStyle="bold"

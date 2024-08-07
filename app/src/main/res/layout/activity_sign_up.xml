@@ -8,7 +8,7 @@
     android:background="@color/app_bg_color"
     tools:context=".Activities.SignUpActivity">
 
-    <!-- Back Button -->
+
     <ImageButton
         android:id="@+id/BTN_back"
         android:layout_width="wrap_content"

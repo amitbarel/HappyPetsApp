@@ -27,6 +27,7 @@
             android:id="@+id/actual_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
             android:text="Title"
             android:textSize="18sp" />
 
@@ -47,7 +48,7 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/img_kind"
-                android:layout_width="72dp"
+                android:layout_width="110dp"
                 android:layout_height="72dp"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true" />
@@ -59,6 +60,7 @@
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:textStyle="bold"
                 android:text="Asked by:" />
 
             <com.google.android.material.textview.MaterialTextView

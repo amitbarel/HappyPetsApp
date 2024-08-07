@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -22,6 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import dev.happypets.Activities.AddPetDialogFragment;
 import dev.happypets.Adapters.PetAdapter;
 import dev.happypets.Adapters.QuestionAdapter;
 import dev.happypets.CallBacks.QuestionCallBack;
@@ -30,6 +32,8 @@ import dev.happypets.Objects.Pet;
 import dev.happypets.Objects.Question;
 import dev.happypets.Objects.User;
 import dev.happypets.R;
+import androidx.fragment.app.FragmentManager;
+import dev.happypets.Activities.AddPetDialogFragment;
 
 public class ProfileFragment extends Fragment {
 
@@ -39,6 +43,7 @@ public class ProfileFragment extends Fragment {
     private QuestionAdapter questionAdapter;
     private PetAdapter petAdapter;
     private MaterialTextView userTitle, vetTitle;
+    private MaterialButton btn_update;
     private DataManager dataManager;
     private FirebaseUser firebaseUser;
     private User currentUser;
@@ -64,8 +69,15 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         dataManager = DataManager.getInstance(getContext());
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        my_pets = view.findViewById(R.id.my_pets);
+        my_pets.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        petAdapter = new PetAdapter(getContext(), new ArrayList<>());
+        my_pets.setAdapter(petAdapter);
+
         findViews(view);
         setupRecyclerViews();
+        fetchUserPets();
+
         return view;
     }
 
@@ -74,9 +86,41 @@ public class ProfileFragment extends Fragment {
         my_questions = view.findViewById(R.id.my_questions);
         userTitle = view.findViewById(R.id.header_questions);
         vetTitle = view.findViewById(R.id.header_questions_v2);
+        btn_update = view.findViewById(R.id.btn_update);
+        btn_update.setOnClickListener(v -> showAddPetDialog());
+
+    }
+
+    private void showAddPetDialog() {
+//        AddPetDialogFragment addPetDialogFragment = new AddPetDialogFragment();
+//        addPetDialogFragment.show(getParentFragmentManager(), "AddPetDialogFragment");
+    }
+
+    private void fetchUserPets() {
+        dataManager.getCurrentUserPets(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    ArrayList<Pet> pets = new ArrayList<>();
+                    for (DataSnapshot petSnapshot : dataSnapshot.getChildren()) {
+                        Pet pet = petSnapshot.getValue(Pet.class);
+                        if (pet != null) {
+                            pets.add(pet);
+                        }
+                    }
+                    petAdapter.updatePets(pets);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("ProfileFragment", "Failed to load user pets", databaseError.toException());
+            }
+        });
     }
 
     private void setupRecyclerViews() {
+
         // Setup RecyclerView for questions
         my_questions.setLayoutManager(new LinearLayoutManager(getContext()));
         myQuestions = new ArrayList<>();
@@ -104,7 +148,6 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        // Setup RecyclerView for pets
         my_pets.setLayoutManager(new LinearLayoutManager(getContext()));
         myPets = new ArrayList<>();
         petAdapter = new PetAdapter(getContext(), myPets);
@@ -134,6 +177,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void fetchCurrentUser() {
+
         dataManager.getCurrentUserName(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -142,7 +186,6 @@ public class ProfileFragment extends Fragment {
                     if (currentUser != null) {
                         Log.d("ProfileFragment", "User email: " + currentUser.getEmail());
                         fetchUserQuestions(currentUser.getEmail());
-                        fetchUserPets();
                     } else {
                         Log.d("ProfileFragment", "Current user is null");
                     }
@@ -166,40 +209,6 @@ public class ProfileFragment extends Fragment {
                 questionAdapter.notifyDataSetChanged();
             } else {
                 Log.d("ProfileFragment", "No questions found for user");
-            }
-        });
-    }
-
-    private void fetchUserPets() {
-        dataManager.getCurrentUserPets(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    myPets.clear();
-                    ArrayList<Pet> fetchedPets = new ArrayList<>();
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        try {
-                            Pet pet = snapshot.getValue(Pet.class);
-                            if (pet != null) {
-                                Log.d("ProfileFragment", "Fetched pet: " + pet.getName());
-                                fetchedPets.add(pet);
-                            } else {
-                                Log.d("ProfileFragment", "Pet data is null");
-                            }
-                        } catch (Exception e) {
-                            Log.e("ProfileFragment", "Error deserializing pet", e);
-                        }
-                    }
-                    Log.d("ProfileFragment", "Fetched " + fetchedPets.size() + " pets.");
-                    petAdapter.updatePets(fetchedPets);
-                } else {
-                    Log.d("ProfileFragment", "No pets found for user");
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e("ProfileFragment", "Failed to fetch pets", databaseError.toException());
             }
         });
     }

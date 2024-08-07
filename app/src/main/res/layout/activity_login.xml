@@ -64,6 +64,9 @@
             android:backgroundTint="@color/logo_color"
             android:text="Login"
             android:textColor="@color/white" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="15dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_signUp"
