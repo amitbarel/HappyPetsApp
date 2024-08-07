@@ -180,7 +180,7 @@ public class SignUpActivity extends AppCompatActivity {
                                         if (task.isSuccessful()) {
                                             AnimalType animalType = DataManager.getAnimalTypes().stream()
                                                     .filter(obj -> obj.getKind().equals(petType)).findFirst().orElse(null);
-                                            Pet pet = new Pet(petName, animalType, imageUrl);
+                                            Pet pet = new Pet().setName(petName).setType(animalType).setPhotoUrl(imageUrl);
                                             User user = new User(userName, userEmail, userPassword, pet);
                                             mDatabase.getReference("Users")
                                                     .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())

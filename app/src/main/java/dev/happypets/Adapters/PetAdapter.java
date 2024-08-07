@@ -69,7 +69,6 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.PetViewHolder> {
         pets.clear();
         pets.addAll(newPets);
         if (pets.isEmpty()) {
-
             Log.d("PetAdapter", "empty object");
         } else {
             notifyDataSetChanged();

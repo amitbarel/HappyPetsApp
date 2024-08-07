@@ -20,11 +20,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/my_pets"
         android:layout_width="match_parent"
-        android:layout_height="99dp"
+        android:layout_height="144dp"
         android:layout_below="@id/header_profile"
         android:layout_marginHorizontal="30dp"
-        android:layout_marginTop="6dp"
-        android:background="@color/gray_bg"
+        android:scrollbars="horizontal"
         android:orientation="horizontal"
         tools:listitem="@layout/pet_item" />
 

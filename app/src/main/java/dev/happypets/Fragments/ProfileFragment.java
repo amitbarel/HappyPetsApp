@@ -119,18 +119,18 @@ public class ProfileFragment extends Fragment {
     }
 
     private void fetchUserPets() {
-        // Fetch pets belonging to the current user from Firebase
         dataManager.getCurrentUserPets(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     myPets.clear();
+                    ArrayList<Pet> fetchedPets = new ArrayList<>();
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         try {
                             Pet pet = snapshot.getValue(Pet.class);
                             if (pet != null) {
-                                Log.d("ProfileFragment", "Pet name: " + pet.getName());
-                                myPets.add(pet);
+                                Log.d("ProfileFragment", "Fetched pet: " + pet.getName());
+                                fetchedPets.add(pet);
                             } else {
                                 Log.d("ProfileFragment", "Pet data is null");
                             }
@@ -138,7 +138,8 @@ public class ProfileFragment extends Fragment {
                             Log.e("ProfileFragment", "Error deserializing pet", e);
                         }
                     }
-                    petAdapter.notifyDataSetChanged();
+                    Log.d("ProfileFragment", "Fetched " + fetchedPets.size() + " pets.");
+                    petAdapter.updatePets(fetchedPets);
                 } else {
                     Log.d("ProfileFragment", "No pets found for user");
                 }

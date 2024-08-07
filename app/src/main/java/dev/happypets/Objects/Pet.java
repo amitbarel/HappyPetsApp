@@ -1,20 +1,16 @@
 package dev.happypets.Objects;
 
 public class Pet {
-
     private String name;
     private AnimalType type;
     private String photoUrl;
 
-    public Pet(String name, AnimalType type, String photoUrl) {
-        this.name = name;
-        this.type = type;
-        this.photoUrl = photoUrl;
-    }
-
+    // No-argument constructor
     public Pet() {
+        // Required for Firebase deserialization
     }
 
+    // Getters and setters
     public String getName() {
         return name;
     }
