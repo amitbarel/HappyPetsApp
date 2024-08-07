@@ -23,8 +23,8 @@
         android:layout_height="144dp"
         android:layout_below="@id/header_profile"
         android:layout_marginHorizontal="30dp"
-        android:scrollbars="horizontal"
         android:orientation="horizontal"
+        android:scrollbars="horizontal"
         tools:listitem="@layout/pet_item" />
 
     <com.google.android.material.button.MaterialButton
@@ -48,7 +48,22 @@
         android:text="My Questions"
         android:textColor="@color/black"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:visibility="invisible" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/header_questions_v2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_update"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"
+        android:layout_marginBottom="8dp"
+        android:text="Questions Answered"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:visibility="invisible" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/my_questions"

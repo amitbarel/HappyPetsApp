@@ -1,14 +1,15 @@
 package dev.happypets.Objects;
 
-import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Question {
     private String questionId;
     private String category;
     private String title;
     private String text;
-    private ArrayList<Answer> relatedAnswers;
+    private Map<String, Answer> relatedAnswers;
     private String askedTime;
     private User askedBy;
 
@@ -20,7 +21,7 @@ public class Question {
         this.category = category;
         this.title = title;
         this.text = text;
-        this.relatedAnswers = new ArrayList<>();
+        this.relatedAnswers = new HashMap<>();
     }
 
     public User getAskedBy() {
@@ -77,18 +78,11 @@ public class Question {
         return this;
     }
 
-    public ArrayList<Answer> getRelatedAnswers() {
+    public Map<String, Answer> getRelatedAnswers() {
         return relatedAnswers;
     }
 
-    public void addAnswer(Answer answer) {
-        if (relatedAnswers == null) {
-            relatedAnswers = new ArrayList<>();
-        }
-        relatedAnswers.add(answer);
-    }
-
-    public Question setRelatedAnswers(ArrayList<Answer> relatedAnswers) {
+    public Question setRelatedAnswers(Map<String, Answer> relatedAnswers) {
         this.relatedAnswers = relatedAnswers;
         return this;
     }

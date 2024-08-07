@@ -19,6 +19,8 @@ import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -43,6 +45,7 @@ public class QuestionsAnswersFragment extends Fragment {
     QuestionAdapter questionAdapter;
     DataManager dataManager;
     ArrayList<Question> questionList;
+    FirebaseUser firebaseUser;
     User currentUser;
 
     public QuestionsAnswersFragment() {
@@ -66,6 +69,7 @@ public class QuestionsAnswersFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_questions_answers, container, false);
         dataManager = DataManager.getInstance(getContext());
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         findViews(view);
         setRecyclerView();
         initViews();
@@ -114,7 +118,21 @@ public class QuestionsAnswersFragment extends Fragment {
             }
         });
 
-        newQuestion.setOnClickListener(v -> popUpDialog());
+        dataManager.getKindOfUser(firebaseUser.getUid(), new DataManager.KindOfUserCallback() {
+            @Override
+            public void onResult(String kindOfUser) {
+                if (kindOfUser.equals("user")){
+                    newQuestion.setOnClickListener(v -> popUpDialog());
+                } else if (kindOfUser.equals("vet")) {
+                    newQuestion.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private void popUpDialog() {

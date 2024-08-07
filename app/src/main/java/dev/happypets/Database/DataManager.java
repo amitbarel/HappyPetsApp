@@ -16,7 +16,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import dev.happypets.CallBacks.AnswerCallback;
@@ -35,6 +37,7 @@ public class DataManager {
 
     private final DatabaseReference questionsRef;
     private ArrayList<AnimalType> animalTypes;
+
     private FirebaseUser currentUser;
 
     public DataManager(Context context) {
@@ -68,13 +71,57 @@ public class DataManager {
         return this.currentUser.getUid();
     }
 
+    public void getKindOfUser(String uid, final KindOfUserCallback callback) {
+        DatabaseReference userRef = firebaseDatabase.getReference("Users").child(uid);
+        DatabaseReference vetRef = firebaseDatabase.getReference("Veterinarians").child(uid);
+
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    callback.onResult("user");
+                } else {
+                    vetRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                callback.onResult("vet");
+                            } else {
+                                callback.onResult("none");
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            callback.onError(error.toException());
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                callback.onError(error.toException());
+            }
+        });
+    }
+
     public void getQuestions(OnDataChangeCallback<List<Question>> callback) {
         questionsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<Question> questions = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    questions.add(snapshot.getValue(Question.class));
+                    Question question = snapshot.getValue(Question.class);
+                    if (question != null) {
+                        // Ensure relatedAnswers is properly handled as a Map
+                        Map<String, Answer> answersMap = question.getRelatedAnswers();
+                        if (answersMap != null) {
+                            // For processing purposes, you might need to set answers back to question
+                            question.setRelatedAnswers(answersMap);
+                        }
+                        questions.add(question);
+                    }
                 }
                 callback.onDataChange(questions);
             }
@@ -86,9 +133,27 @@ public class DataManager {
         });
     }
 
-    public DataManager setAnimalTypes(ArrayList<AnimalType> animalTypes) {
-        this.animalTypes = animalTypes;
-        return this;
+
+    public void getQuestionsAnsweredBySpecific(String uid, OnDataChangeCallback<List<Question>> callback) {
+        getQuestions(data -> {
+            if (data == null) {
+                callback.onDataChange(new ArrayList<>());
+                return;
+            }
+
+            ArrayList<Question> myQuestions = new ArrayList<>();
+            for (Question question : data) {
+                if (question.getRelatedAnswers() != null) { // Check for null relatedAnswers
+                    for (Answer answer : question.getRelatedAnswers().values()) {
+                        if (answer != null && answer.getAnsweredByID() != null && answer.getAnsweredByID().equals(uid)) {
+                            myQuestions.add(question);
+                            break;
+                        }
+                    }
+                }
+            }
+            callback.onDataChange(myQuestions);
+        });
     }
 
     public void setQuestions(ArrayList<Question> questions) {
@@ -174,20 +239,20 @@ public class DataManager {
                                        final OnDataChangeCallback listener) {
         questionsRef.orderByChild("category").equalTo(category)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ArrayList<Question> relatedQuestions = new ArrayList<>();
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    relatedQuestions.add(dataSnapshot.getValue(Question.class));
-                }
-                listener.onDataChange(relatedQuestions);
-            }
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        ArrayList<Question> relatedQuestions = new ArrayList<>();
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            relatedQuestions.add(dataSnapshot.getValue(Question.class));
+                        }
+                        listener.onDataChange(relatedQuestions);
+                    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                listener.onDataChange(Collections.emptyList());
-            }
-        });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        listener.onDataChange(Collections.emptyList());
+                    }
+                });
     }
 
     @NonNull
@@ -202,11 +267,10 @@ public class DataManager {
         return question;
     }
 
-    public ArrayList<Answer> addAnswersManually(DataSnapshot relatedAnswers) {
-        ArrayList<Answer> answers = new ArrayList<>();
+    public Map<String, Answer> addAnswersManually(DataSnapshot relatedAnswers) {
+        Map<String, Answer> answers = new HashMap<>();
         for (DataSnapshot snapshot : relatedAnswers.getChildren()) {
-            Answer answer = snapshot.getValue(Answer.class);
-            answers.add(answer);
+            answers.put(snapshot.getKey(), snapshot.getValue(Answer.class));
         }
         return answers;
     }
@@ -221,8 +285,24 @@ public class DataManager {
     public void getCurrentUserName(ValueEventListener listener) {
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         if (currentUser != null) {
-            DatabaseReference userRef = firebaseDatabase.getReference("Users").child(currentUser.getUid());
-            userRef.addListenerForSingleValueEvent(listener);
+            getKindOfUser(currentUser.getUid(), new KindOfUserCallback() {
+                @Override
+                public void onResult(String kindOfUser) {
+                    if (kindOfUser.equals("user")) {
+                        DatabaseReference userRef = firebaseDatabase.getReference("Users").child(currentUser.getUid());
+                        userRef.addListenerForSingleValueEvent(listener);
+                    } else if (kindOfUser.equals("vet")) {
+                        DatabaseReference vetRef = firebaseDatabase.getReference("Veterinarians").child(currentUser.getUid());
+                        vetRef.addListenerForSingleValueEvent(listener);
+                    }
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    Log.e("DataManager", "Error getting kind of user: " + e.getMessage());
+                }
+            });
+
         }
     }
 
@@ -232,24 +312,16 @@ public class DataManager {
         if (answerId == null) return;
 
         answer.setAnswerId(answerId);
+        answer.setAnsweredByID(currentUser.getUid());
+
+        // Only add the new answer to the relatedAnswers list without re-setting the entire Question
         answersRef.setValue(answer).addOnCompleteListener(task -> {
-            if (!task.isSuccessful()) return;
-
-            getQuestionById(questionId, new OnQuestionRetrievedListener() {
-                @Override
-                public void onQuestionRetrieved(Question question) {
-                    if (question == null) return;
-                    question.addAnswer(answer);
-                    questionsRef.child(questionId).setValue(question);
-                }
-
-                @Override
-                public void onError(Exception e) {
-                    Log.e("DataManager", "Error adding answer to question: " + e.getMessage());
-                }
-            });
+            if (!task.isSuccessful()) {
+                Log.e("DataManager", "Failed to add new answer: " + task.getException());
+            }
         });
     }
+
 
 
     public void getAnswersByQuestionId(String questionId, AnswerCallback callback) {
@@ -294,16 +366,6 @@ public class DataManager {
         favoritesRef.child(question.getQuestionId()).removeValue().addOnCompleteListener(task -> onComplete.run());
     }
 
-    public void isQuestionInFavorites(String userId, Question question, OnBooleanResultListener listener) {
-        DatabaseReference favoritesRef = firebaseDatabase.getReference("Users").child(userId).child("favoriteQuestions");
-        favoritesRef.child(question.getQuestionId()).get().addOnSuccessListener(dataSnapshot -> {
-            listener.onResult(dataSnapshot.exists());
-        }).addOnFailureListener(e -> {
-            Log.e("DataManager", "Failed to check if question is in favorites", e);
-            listener.onResult(false);
-        });
-    }
-
     public void listenForFavoriteQuestions(String userId, ValueEventListener listener) {
         DatabaseReference favoritesRef = firebaseDatabase.getReference("Users").child(userId).child("favoriteQuestions");
         favoritesRef.addValueEventListener(listener);
@@ -319,15 +381,17 @@ public class DataManager {
         void onError(Exception e);
     }
 
-    public interface OnBooleanResultListener {
-        void onResult(boolean isInFavorites);
-    }
-
     public interface OnDataChangeCallback<T> {
         void onDataChange(T data);
     }
 
     public interface OnQuestionAddedCallback {
         void onQuestionAdded(Question question);
+    }
+
+    public interface KindOfUserCallback {
+        void onResult(String kindOfUser);
+
+        void onError(Exception e);
     }
 }
