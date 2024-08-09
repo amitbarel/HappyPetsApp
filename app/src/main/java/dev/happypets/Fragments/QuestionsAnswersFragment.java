@@ -210,7 +210,7 @@ public class QuestionsAnswersFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("NewQuestionActivity", "Failed to read user data", databaseError.toException());
+                Log.d("QA-Fragment", "Failed to read user data", databaseError.toException());
             }
         });
 

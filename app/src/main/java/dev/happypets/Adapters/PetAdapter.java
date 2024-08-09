@@ -15,6 +15,8 @@ import dev.happypets.R;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.json.JSONArray;
 
@@ -37,12 +39,17 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.PetViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull PetViewHolder holder, int position) {
+        String imageName = pets.get(position).getPhotoUrl();
+        Log.d("PetAdapter", "Image Name: " + imageName);
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("pet_images/" + imageName);
 
         holder.petName.setText(pets.get(position).getName());
         holder.petType.setText(pets.get(position).getType().getKind());
 
         Glide.with(context)
-                .load(pets.get(position).getPhotoUrl())
+                .load(storageRef)
+                .placeholder(R.drawable.profile_24)
+                .error(R.drawable.baseline_assignment_late_24)
                 .into(holder.petImage);
     }
 

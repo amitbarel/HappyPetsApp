@@ -12,7 +12,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="78dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/grad_bg">
 
         <LinearLayout
@@ -47,7 +47,7 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:orientation="vertical">
 
@@ -61,13 +61,10 @@
                 android:text="Title"
                 android:textSize="16sp"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="18dp"/>
-
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/txt_numberOfAnswers"

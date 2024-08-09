@@ -1,6 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    android:layout_width="350dp"
     android:layout_height="wrap_content"
     android:padding="20dp"
     android:background="@drawable/grad_bg">
@@ -37,7 +37,7 @@
         android:textColor="@color/white"
         android:text="Upload Pet Photo" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_photo_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
