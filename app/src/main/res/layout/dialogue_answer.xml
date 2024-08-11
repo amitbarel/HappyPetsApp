@@ -22,7 +22,9 @@
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             android:layout_marginTop="15dp"
-            android:hint="Title" />
+            android:hint="Title"
+            android:textColorHint="@color/black"
+            app:hintTextColor="@color/black" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -41,7 +43,9 @@
             android:hint="Body"
             android:inputType="textMultiLine"
             android:maxLines="5"
-            android:minLines="1" />
+            android:minLines="1"
+            android:textColorHint="@color/black"
+            app:hintTextColor="@color/black" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton

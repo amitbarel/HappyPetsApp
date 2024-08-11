@@ -35,6 +35,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="18dp"
         android:backgroundTint="@color/logo_color"
+        android:textColor="@color/white"
         android:text="Update Profile" />
 
     <com.google.android.material.textview.MaterialTextView

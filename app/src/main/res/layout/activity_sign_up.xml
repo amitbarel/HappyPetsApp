@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -13,23 +12,23 @@
         android:id="@+id/BTN_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_back_arrow"
-        android:contentDescription="Back"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="5dp"
-        android:backgroundTint="@color/app_bg_color"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:backgroundTint="@color/app_bg_color"
+        android:contentDescription="Back"
+        android:src="@drawable/ic_back_arrow" />
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_below="@id/BTN_back"
         android:layout_alignParentTop="true"
         android:layout_marginTop="30dp"
-        android:layout_below="@id/BTN_back"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
 
         <com.google.android.material.imageview.ShapeableImageView
@@ -44,28 +43,30 @@
             android:id="@+id/ll_main"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
 
             <RadioGroup
                 android:id="@+id/rg_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="12dp">
+                android:layout_marginBottom="12dp"
+                android:orientation="vertical">
+
                 <RadioButton
                     android:id="@+id/rb_veterinarian"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:text="Veterinarian" />
+                    android:text="Veterinarian"
+                    android:textColor="@color/black" />
+
                 <RadioButton
                     android:id="@+id/rb_regular_user"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:text="Regular User" />
+                    android:text="Regular User"
+                    android:textColor="@color/black" />
             </RadioGroup>
 
 
@@ -75,79 +76,98 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:visibility="gone">
+
                 <com.google.android.material.textfield.TextInputLayout
+                    style="@style/CustomTextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/CustomTextInputLayout">
+                    android:textColorHint="@color/black"
+                    app:hintTextColor="@color/black"
+                    android:hint="Name">
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/ET_vet_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
                         style="@style/CustomTextInputEditText"
-                        android:hint="Name" />
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    style="@style/CustomTextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/CustomTextInputLayout">
+                    android:textColorHint="@color/black"
+                    app:hintTextColor="@color/black"
+                    android:hint="@string/email_for_ET">
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/ET_vet_email"
+                        style="@style/CustomTextInputEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/CustomTextInputEditText"
-                        android:hint="@string/email_for_ET"
                         android:inputType="textEmailAddress" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    style="@style/CustomTextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/CustomTextInputLayout">
+                    android:textColorHint="@color/black"
+                    app:hintTextColor="@color/black"
+                    android:hint="@string/clinic_phone_ET">
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_vet_phone"
+                        style="@style/CustomTextInputEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/CustomTextInputEditText"
-                        android:hint="@string/clinic_phone_ET"
                         android:inputType="phone" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    style="@style/CustomTextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/CustomTextInputLayout">
+                    android:textColorHint="@color/black"
+                    app:hintTextColor="@color/black"
+                    android:hint="@string/clinic_address_for_ET">
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_vet_address"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
                         style="@style/CustomTextInputEditText"
-                        android:hint="@string/clinic_address_for_ET" />
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    style="@style/CustomTextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/CustomTextInputLayout">
+                    android:textColorHint="@color/black"
+                    app:hintTextColor="@color/black"
+                    android:hint="@string/password">
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_vet_password"
+                        style="@style/CustomTextInputEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/CustomTextInputEditText"
-                        android:hint="@string/password"
                         android:inputType="textPassword" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    style="@style/CustomTextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/CustomTextInputLayout">
+                    android:textColorHint="@color/black"
+                    app:hintTextColor="@color/black"
+                    android:hint="@string/license_number_ET">
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_vet_license"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
                         style="@style/CustomTextInputEditText"
-                        android:hint="@string/license_number_ET" />
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.button.MaterialButton
@@ -155,8 +175,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/logo_color"
-                    android:textColor="@color/white"
-                    android:text="Upload Business License" />
+                    android:text="Upload Business License"
+                    android:textColor="@color/white" />
             </LinearLayout>
 
 
@@ -166,70 +186,84 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:visibility="gone">
+
                 <com.google.android.material.textfield.TextInputLayout
+                    style="@style/CustomTextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/CustomTextInputLayout">
+                    android:textColorHint="@color/black"
+                    app:hintTextColor="@color/black"
+                    android:hint="Name">
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_user_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
                         style="@style/CustomTextInputEditText"
-                        android:hint="Name" />
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    style="@style/CustomTextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/CustomTextInputLayout">
+                    android:textColorHint="@color/black"
+                    app:hintTextColor="@color/black"
+                    android:hint="@string/email_for_ET">
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_user_email"
+                        style="@style/CustomTextInputEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/CustomTextInputEditText"
-                        android:hint="@string/email_for_ET"
                         android:inputType="textEmailAddress" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    style="@style/CustomTextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/CustomTextInputLayout">
+                    android:textColorHint="@color/black"
+                    app:hintTextColor="@color/black"
+                    android:hint="@string/password">
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_user_password"
+                        style="@style/CustomTextInputEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/CustomTextInputEditText"
-                        android:hint="@string/password"
                         android:inputType="textPassword" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    style="@style/CustomTextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/CustomTextInputLayout">
+                    android:textColorHint="@color/black"
+                    app:hintTextColor="@color/black"
+                    android:hint="Pet Name">
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_pet_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
                         style="@style/CustomTextInputEditText"
-                        android:hint="Pet Name" />
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Spinner
                     android:id="@+id/spinner_pet_type"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:foregroundTint="@color/black"
-                    android:entries="@array/pet_types" />
+                    android:entries="@array/pet_types"
+                    android:popupTheme="@layout/spinner_item"
+                    android:foregroundTint="@color/black" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_upload_pet_photo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/logo_color"
-                    android:textColor="@color/white"
-                    android:text="Upload Pet Photo" />
+                    android:text="Upload Pet Photo"
+                    android:textColor="@color/white" />
             </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
@@ -237,8 +271,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/logo_color"
-                android:textColor="@color/white"
-                android:text="Sign Up" />
+                android:text="Sign Up"
+                android:textColor="@color/white" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

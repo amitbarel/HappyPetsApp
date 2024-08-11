@@ -12,7 +12,9 @@
         style="@style/CustomTextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="10dp"
+        android:textColorHint="@color/black"
+        app:hintTextColor="@color/black">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/question_title"
@@ -29,7 +31,9 @@
         style="@style/CustomTextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="10dp"
+        android:textColorHint="@color/black"
+        app:hintTextColor="@color/black">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/question_body"
@@ -57,6 +61,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="40dp"
         android:backgroundTint="@color/logo_color"
-        android:text="Publish" />
+        android:text="Publish"
+        android:textColor="@color/white" />
 
 </LinearLayout>

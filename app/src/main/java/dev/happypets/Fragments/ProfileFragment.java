@@ -36,6 +36,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import dev.happypets.Adapters.PetAdapter;
 import dev.happypets.Adapters.QuestionAdapter;
@@ -139,24 +140,33 @@ public class ProfileFragment extends Fragment {
                         String photoUrl = uri.toString();
 
                         DatabaseReference petRef = userRef.child("pets");
+                        petRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                long nextIndex = snapshot.getChildrenCount();
+                                DatabaseReference nextPetRef = petRef.child(String.valueOf(nextIndex));
+                                AnimalType animalType = DataManager.getAnimalTypes().stream()
 
-                        AnimalType animalType = DataManager.getAnimalTypes().stream()
+                                        .filter(obj -> obj.getKind().equals(type)).findFirst().orElse(null);
 
-                                .filter(obj -> obj.getKind().equals(type)).findFirst().orElse(null);
+                                Pet pet = new Pet().setName(name).setType(animalType).setPhotoUrl(photoUrl);
+                                nextPetRef.setValue(pet).addOnCompleteListener(task -> {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(getContext(), "Pet saved successfully", Toast.LENGTH_SHORT).show();
+                                        dialog.dismiss();
+                                    } else {
+                                        Toast.makeText(getContext(), "Failed to save pet", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
 
-                        Pet pet = new Pet().setName(name).setType(animalType).setPhotoUrl(photoUrl);
-
-                        userRef.setValue(pet).addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(getContext(), "Pet saved successfully", Toast.LENGTH_SHORT).show();
-                                dialog.dismiss();
-                            } else {
-                                Toast.makeText(getContext(), "Failed to save pet", Toast.LENGTH_SHORT).show();
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Toast.makeText(getContext(), "Failed to read data: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
                     }))
                     .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to upload photo", Toast.LENGTH_SHORT).show());
-
         });
         dialog.setCancelable(true);
         dialog.show();

@@ -41,13 +41,13 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.PetViewHolder> {
     public void onBindViewHolder(@NonNull PetViewHolder holder, int position) {
         String imageName = pets.get(position).getPhotoUrl();
         Log.d("PetAdapter", "Image Name: " + imageName);
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("pet_images/" + imageName);
+//        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("pet_images/" + imageName);
 
         holder.petName.setText(pets.get(position).getName());
         holder.petType.setText(pets.get(position).getType().getKind());
 
         Glide.with(context)
-                .load(storageRef)
+                .load(imageName)
                 .placeholder(R.drawable.profile_24)
                 .error(R.drawable.baseline_assignment_late_24)
                 .into(holder.petImage);

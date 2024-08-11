@@ -18,7 +18,7 @@
     <!-- Custom style for TextInputEditText -->
     <style name="CustomTextInputEditText" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox">
         <item name="android:textColor">@color/black</item>
-        <item name="android:hint">@color/black</item>
+        <item name="android:textColorHint">@color/black</item> <!-- Use textColorHint instead of hint -->
     </style>
 
     <style name="Theme.HappyPets" parent="Base.Theme.HappyPets" />

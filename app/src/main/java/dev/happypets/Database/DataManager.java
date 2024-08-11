@@ -349,7 +349,7 @@ public class DataManager {
 
     public void getCurrentUserPets(ValueEventListener listener) {
         if (currentUser != null) {
-            DatabaseReference petsRef = firebaseDatabase.getReference("Users").child(currentUser.getUid()).child("pet");
+            DatabaseReference petsRef = firebaseDatabase.getReference("Users").child(currentUser.getUid()).child("pets");
             petsRef.addListenerForSingleValueEvent(listener);
         } else {
             Log.e("DataManager", "Current user is null");

@@ -170,11 +170,11 @@ public class SignUpActivity extends AppCompatActivity {
     private void uploadUserFile(String userEmail, String userPassword, String userName, String petName, String petType) {
         if (imageUri != null) {
             StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("pet_images/" + UUID.randomUUID().toString());
+
             storageReference.putFile(imageUri)
                     .addOnSuccessListener(taskSnapshot -> {
-                        Task<Uri> downloadUrl = taskSnapshot.getStorage().getDownloadUrl();
-                        downloadUrl.addOnSuccessListener(uri -> {
-                            imageUrl = uri.toString();
+                        storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
+                            String imageUrl = uri.toString();
                             mAuth.createUserWithEmailAndPassword(userEmail, userPassword)
                                     .addOnCompleteListener(task -> {
                                         if (task.isSuccessful()) {
@@ -184,19 +184,26 @@ public class SignUpActivity extends AppCompatActivity {
                                             User user = new User(userName, userEmail, userPassword, pet);
                                             mDatabase.getReference("Users")
                                                     .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
-                                                    .setValue(user).addOnCompleteListener(this::onSignupComplete);
+                                                    .setValue(user)
+                                                    .addOnCompleteListener(this::onSignupComplete);
                                         } else {
                                             String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error";
                                             Toast.makeText(SignUpActivity.this, "Sign up failed. " + errorMessage, Toast.LENGTH_LONG).show();
                                         }
                                     });
+                        }).addOnFailureListener(e -> {
+                            Toast.makeText(SignUpActivity.this, "Failed to retrieve download URL: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         });
                     })
-                    .addOnFailureListener(e -> Toast.makeText(SignUpActivity.this, "Upload failed", Toast.LENGTH_SHORT).show());
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(SignUpActivity.this, "Upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.e("UploadError", "Error uploading file", e);
+                    });
         } else {
             Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     private boolean validateVetFields(String vetName, String vetEmail, String vetPhone, String vetAddress, String vetPassword, String vetLicense) {
         if (vetName.isEmpty() || vetEmail.isEmpty() || vetPhone.isEmpty() || vetAddress.isEmpty() || vetPassword.isEmpty() || vetLicense.isEmpty()) {
