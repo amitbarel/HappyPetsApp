@@ -15,7 +15,8 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_back_arrow"
         android:contentDescription="Back"
-        android:layout_margin="8dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
         android:backgroundTint="@color/app_bg_color"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true" />
@@ -25,6 +26,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="30dp"
         android:layout_below="@id/BTN_back"
         android:gravity="center_horizontal">
 
@@ -34,7 +37,6 @@
             android:layout_width="200dp"
             android:layout_height="150dp"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp"
             android:src="@drawable/logo_blue" />
 
 
