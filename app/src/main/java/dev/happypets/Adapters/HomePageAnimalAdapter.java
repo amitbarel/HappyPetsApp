@@ -15,12 +15,12 @@ import java.util.ArrayList;
 import dev.happypets.Objects.AnimalType;
 import dev.happypets.R;
 
-public class PetImgAdapter extends RecyclerView.Adapter<PetImgAdapter.PetViewHolder> {
+public class HomePageAnimalAdapter extends RecyclerView.Adapter<HomePageAnimalAdapter.PetViewHolder> {
 
     private Context context;
     private ArrayList<AnimalType> petKinds;
 
-    public PetImgAdapter(Context context, ArrayList<AnimalType> kinds) {
+    public HomePageAnimalAdapter(Context context, ArrayList<AnimalType> kinds) {
         this.context = context;
         petKinds = kinds;
     }
@@ -39,13 +39,13 @@ public class PetImgAdapter extends RecyclerView.Adapter<PetImgAdapter.PetViewHol
 
     @NonNull
     @Override
-    public PetImgAdapter.PetViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public HomePageAnimalAdapter.PetViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.animal_item, parent, false);
         return new PetViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PetImgAdapter.PetViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull HomePageAnimalAdapter.PetViewHolder holder, int position) {
         AnimalType type = petKinds.get(position);
         holder.animal_name.setText(type.getKind());
         holder.animal_image.setImageResource(type.getImageSrc());

@@ -35,6 +35,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import dev.happypets.Adapters.PetAdapter;
 import dev.happypets.Adapters.QuestionAdapter;
@@ -108,8 +109,9 @@ public class ProfileFragment extends Fragment {
     private void popUpDialog() {
         Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.dialogue_add_pet);
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference("pet_images");
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("pet_images/" + UUID.randomUUID().toString());
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+
 
         et_name = dialog.findViewById(R.id.et_pet_name);
         pet_type = dialog.findViewById(R.id.spinner_pet_type);
@@ -135,8 +137,8 @@ public class ProfileFragment extends Fragment {
             fileReference.putFile(photoUri)
                     .addOnSuccessListener(taskSnapshot -> fileReference.getDownloadUrl().addOnSuccessListener(uri -> {
                         String photoUrl = uri.toString();
-                        String userId = firebaseUser.getUid();
-                        DatabaseReference petRef = userRef.child(userId).child("pets").push();
+
+                        DatabaseReference petRef = userRef.child("pets");
 
                         AnimalType animalType = DataManager.getAnimalTypes().stream()
 

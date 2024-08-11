@@ -10,9 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 public class GridAdapter extends BaseAdapter {
 
     private Context context;
-    private PetImgAdapter petImgAdapter;
+    private HomePageAnimalAdapter petImgAdapter;
 
-    public GridAdapter(Context context, PetImgAdapter petImgAdapter) {
+    public GridAdapter(Context context, HomePageAnimalAdapter petImgAdapter) {
         this.context = context;
         this.petImgAdapter = petImgAdapter;
     }
@@ -42,7 +42,7 @@ public class GridAdapter extends BaseAdapter {
         } else {
             viewHolder = (RecyclerView.ViewHolder) convertView.getTag();
         }
-        petImgAdapter.onBindViewHolder((PetImgAdapter.PetViewHolder) viewHolder, position);
+        petImgAdapter.onBindViewHolder((HomePageAnimalAdapter.PetViewHolder) viewHolder, position);
         return convertView;
     }
 }

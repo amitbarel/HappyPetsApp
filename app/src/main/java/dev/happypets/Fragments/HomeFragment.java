@@ -12,8 +12,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textview.MaterialTextView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -22,7 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import dev.happypets.Adapters.GridAdapter;
-import dev.happypets.Adapters.PetImgAdapter;
+import dev.happypets.Adapters.HomePageAnimalAdapter;
 import dev.happypets.Database.DataManager;
 import dev.happypets.Objects.AnimalType;
 import dev.happypets.Objects.User;
@@ -55,7 +53,7 @@ public class HomeFragment extends Fragment {
         animalTypes = view.findViewById(R.id.animals_choose);
         welcomeMSG = view.findViewById(R.id.welcome_msg);
         kinds = DataManager.getAnimalTypes();
-        PetImgAdapter adapter = new PetImgAdapter(getContext(), kinds);
+        HomePageAnimalAdapter adapter = new HomePageAnimalAdapter(getContext(), kinds);
         GridAdapter gridAdapter = new GridAdapter(getContext(), adapter);
         animalTypes.setAdapter(gridAdapter);
         animalTypes.setOnItemClickListener((parent, view1, position, id) -> {
