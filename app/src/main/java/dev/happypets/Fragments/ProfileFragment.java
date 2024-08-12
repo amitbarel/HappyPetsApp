@@ -221,10 +221,11 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onResult(String kindOfUser) {
                 if (kindOfUser.equals("vet")) {
-                    userTitle.setVisibility(View.GONE);
-                    my_pets.setVisibility(View.GONE);
-                    headerUser.setVisibility(View.GONE);
                     vetTitle.setVisibility(View.VISIBLE);
+                    btn_update.setVisibility(View.INVISIBLE);
+                    userTitle.setVisibility(View.INVISIBLE);
+                    my_pets.setVisibility(View.GONE);
+                    headerUser.setVisibility(View.INVISIBLE);
                     fetchVetQuestions();
 
                 } else if (kindOfUser.equals("user")) {

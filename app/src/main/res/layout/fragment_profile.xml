@@ -35,32 +35,33 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="18dp"
         android:backgroundTint="@color/logo_color"
-        android:textColor="@color/white"
-        android:text="Update Profile" />
+        android:text="Update Profile"
+        android:textColor="@color/white" />
+
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/header_questions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/btn_update"
+        android:text="My Questions"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="18dp"
         android:layout_marginBottom="8dp"
-        android:text="My Questions"
         android:textColor="@color/black"
+        android:layout_below="@id/btn_update"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:visibility="invisible" />
+        android:visibility="visible"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/header_questions_v2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/btn_update"
+        android:text="Questions Answered"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="18dp"
         android:layout_marginBottom="8dp"
-        android:text="Questions Answered"
+        android:layout_below="@id/btn_update"
         android:textColor="@color/black"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -70,8 +71,8 @@
         android:id="@+id/my_questions"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/header_questions"
         android:layout_marginHorizontal="30dp"
+        android:layout_below="@id/header_questions"
         android:layout_marginBottom="78dp"
         android:orientation="vertical"
         tools:listitem="@layout/question_item" />

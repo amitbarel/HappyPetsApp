@@ -1,32 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
     android:layout_margin="4dp"
-    app:cardElevation="6dp"
+    android:orientation="horizontal"
     app:cardCornerRadius="16dp"
+    app:cardElevation="6dp"
     android:keepScreenOn="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="72dp"
-        android:background="@drawable/grad_bg">
+        android:layout_height="wrap_content"
+        android:background="@drawable/grad_bg"
+        android:padding="8dp">
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/txt_answer_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Title"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_marginBottom="4dp"
+            android:layout_alignParentStart="true" />
+
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/txt_answer_body"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="30dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txt_answer_title"
+            android:text="Answer body text goes here."
+            android:textSize="16sp"
             android:layout_marginBottom="8dp"
-            android:layout_marginStart="8dp"
-            android:padding="4dp"
-            android:maxLines="3"
-            android:text="Answer"
-            android:textSize="16sp" />
+            android:layout_marginEnd="50dp" />
 
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/txt_answered_by"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/txt_answer_body"
+            android:text="Answered by: User"
+            android:textSize="14sp"
+            android:textColor="@android:color/darker_gray" />
     </RelativeLayout>
 
 </com.google.android.material.card.MaterialCardView>
