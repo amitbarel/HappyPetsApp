@@ -26,6 +26,7 @@
                 android:id="@+id/txt_question_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
                 android:textSize="12sp"
                 android:text="Time"/>
 
@@ -58,6 +59,7 @@
                 android:textAllCaps="true"
                 android:textStyle="bold"
                 android:maxLines="2"
+                android:textColor="@color/black"
                 android:text="Title"
                 android:textSize="16sp"/>
 
@@ -70,12 +72,14 @@
                     android:id="@+id/txt_numberOfAnswers"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/black"
                     android:text="#"
                     android:textSize="16sp"/>
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/black"
                     android:text=" Answers"
                     android:textSize="16sp"/>
 

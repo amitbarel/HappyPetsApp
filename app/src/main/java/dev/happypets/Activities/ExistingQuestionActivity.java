@@ -87,13 +87,9 @@ public class ExistingQuestionActivity extends AppCompatActivity {
                     // Get answers for the question
                     dataManager.getAnswersByQuestionId(chosenQuestionId, answers -> runOnUiThread(() -> {
                         if (answers != null && !answers.isEmpty()) {
-                            for (Answer ans : answers) {
-                                Log.d("ExistingQuestionActivity", "Answer: " + ans.getText());
-                            }
                             answerAdapter = new AnswerAdapter(ExistingQuestionActivity.this, answers);
                             relatedAnswers.setAdapter(answerAdapter);
                         } else {
-                            // Handle the case where no answers are found
                             Toast.makeText(ExistingQuestionActivity.this, "No answers found for this question", Toast.LENGTH_SHORT).show();
                         }
                     }));

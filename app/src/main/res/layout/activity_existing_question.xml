@@ -27,18 +27,21 @@
             android:id="@+id/actual_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
             android:text="Title"
-            android:textSize="18sp" />
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/actual_body"
             android:layout_width="match_parent"
             android:layout_height="150dp"
+            android:alpha=".75"
             android:gravity="start"
             android:maxLines="6"
             android:padding="4dp"
             android:text="Body"
+            android:textColor="@color/black"
             android:textSize="15sp" />
 
         <LinearLayout
@@ -60,15 +63,17 @@
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:textStyle="bold"
-                android:text="Asked by:" />
+                android:text="Asked by:"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_username"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="15dp"
-                android:text="username" />
+                android:text="username"
+                android:textColor="@color/black" />
 
         </LinearLayout>
 
@@ -94,6 +99,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/logo_color"
-        android:text="Add answer"/>
+        android:text="Add answer"
+        android:textColor="@color/white" />
 
 </RelativeLayout>

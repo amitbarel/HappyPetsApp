@@ -5,10 +5,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.GridView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textview.MaterialTextView;
@@ -18,11 +20,15 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import dev.happypets.Adapters.GridAdapter;
 import dev.happypets.Adapters.HomePageAnimalAdapter;
+import dev.happypets.Adapters.QuestionAdapter;
+import dev.happypets.CallBacks.QuestionCallBack;
 import dev.happypets.Database.DataManager;
 import dev.happypets.Objects.AnimalType;
+import dev.happypets.Objects.Question;
 import dev.happypets.Objects.User;
 import dev.happypets.R;
 
@@ -31,6 +37,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView questionUpdates;
     private MaterialTextView welcomeMSG;
     private DataManager dataManager;
+    private QuestionAdapter questionAdapter;
     private GridView animalTypes;
     private ArrayList<AnimalType> kinds;
     private User currentUser;
@@ -39,13 +46,33 @@ public class HomeFragment extends Fragment {
         // Required empty public constructor
     }
 
+    QuestionCallBack questionCallBack = new QuestionCallBack() {
+        @Override
+        public void favoriteClicked(Question question, int position) {
+            //The adapter handles it
+        }
+
+        @Override
+        public void onClicked(Question question, int position) {
+            //The adapter handles it
+        }
+    };
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         dataManager = DataManager.getInstance(getContext());
         findViews(view);
+        setQuestionsRecycler();
         fetchCurrentUser();
         return view;
+    }
+
+    private void setQuestionsRecycler() {
+        questionUpdates.setLayoutManager(new LinearLayoutManager(getContext()));
+        dataManager.getTwoMostRecentQuestions(data ->
+                questionUpdates.setAdapter(new QuestionAdapter(getContext(), new ArrayList<>(data), questionCallBack)));
+
     }
 
     private void findViews(View view) {
@@ -64,7 +91,7 @@ public class HomeFragment extends Fragment {
                     QuestionsAnswersFragment.class,
                     args).commit();
         });
-
+        questionUpdates.setAdapter(adapter);
     }
 
     private void fetchCurrentUser() {

@@ -4,10 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
+    android:keepScreenOn="true"
     android:orientation="horizontal"
     app:cardCornerRadius="16dp"
-    app:cardElevation="6dp"
-    android:keepScreenOn="true">
+    app:cardElevation="6dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -20,11 +20,12 @@
             android:id="@+id/txt_answer_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Title"
-            android:textStyle="bold"
-            android:textSize="18sp"
+            android:layout_alignParentStart="true"
             android:layout_marginBottom="4dp"
-            android:layout_alignParentStart="true" />
+            android:text="Title"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
 
         <com.google.android.material.textview.MaterialTextView
@@ -32,21 +33,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/txt_answer_title"
-            android:text="Answer body text goes here."
-            android:textSize="16sp"
+            android:layout_marginEnd="50dp"
             android:layout_marginBottom="8dp"
-            android:layout_marginEnd="50dp" />
+            android:textColor="@color/black"
+            android:text="Answer body text goes here."
+            android:textSize="16sp" />
 
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/txt_answered_by"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
             android:layout_below="@id/txt_answer_body"
+            android:layout_alignParentEnd="true"
             android:text="Answered by: User"
-            android:textSize="14sp"
-            android:textColor="@android:color/darker_gray" />
+            android:textColor="@color/black"
+            android:alpha=".45"
+            android:textSize="14sp" />
     </RelativeLayout>
 
 </com.google.android.material.card.MaterialCardView>

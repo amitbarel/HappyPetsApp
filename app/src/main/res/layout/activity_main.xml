@@ -7,7 +7,7 @@
     android:background="@color/app_bg_color"
     tools:context=".Activities.MainActivity">
 
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
@@ -20,16 +20,16 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_alignParentBottom="true"
-        app:abb_tabColor="@color/white"
         android:background="@drawable/grad_tool"
-        app:abb_indicatorLocation="bottom"
-        app:abb_rippleEnabled="true"
-        app:abb_rippleColor="@color/blue_grotto"
         app:abb_indicatorAppearance="round"
         app:abb_indicatorHeight="4dp"
+        app:abb_indicatorLocation="bottom"
         app:abb_indicatorMargin="16dp"
+        app:abb_rippleColor="@color/blue_grotto"
+        app:abb_rippleEnabled="true"
         app:abb_selectedIndex="0"
         app:abb_selectedTabType="text"
+        app:abb_tabColor="@color/white"
         app:abb_tabs="@menu/bottom_nav_menu" />
 
 </RelativeLayout>

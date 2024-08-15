@@ -24,7 +24,7 @@ import dev.happypets.R;
 
 public class AnswerAdapter extends RecyclerView.Adapter<AnswerAdapter.AnswerViewHolder> {
     private Context context;
-   private List<Answer> answers;
+    private List<Answer> answers;
 
     public AnswerAdapter(Context context, List<Answer> answers) {
         this.context = context;
@@ -38,47 +38,28 @@ public class AnswerAdapter extends RecyclerView.Adapter<AnswerAdapter.AnswerView
         return new AnswerViewHolder(view);
     }
 
-//    @Override
-//    public void onBindViewHolder(@NonNull AnswerViewHolder holder, int position) {
-//        Answer answer = answers.get(position);
-//        holder.txtAnswerBody.setText(answer.getText());
-//        holder.txtAnswerTitle.setText(answer.getTitle());
-//        DataManager.getInstance(context).getKindOfUser(answer.getAnsweredByID(), new DataManager.KindOfUserCallback() {
-//
-//            @Override
-//            public void onResult(String kindOfUser) {
-//                DatabaseReference baseRef = FirebaseDatabase.getInstance().getReference();
-//                if (kindOfUser.equals("user")) {
-//                    baseRef.child("users").child(answer.getAnsweredByID()).child("name").get().addOnSuccessListener(dataSnapshot ->
-//                            holder.txtAnsweredBy.setText(dataSnapshot.getValue(String.class)));
-//                } else if (kindOfUser.equals("vet")) {
-//                    baseRef.child("Veterinarians").child(answer.getAnsweredByID()).child("name").get().addOnSuccessListener(dataSnapshot ->
-//                            holder.txtAnsweredBy.setText(dataSnapshot.getValue(String.class).concat(" : Vet")));
-//                }
-//            }
-//
-//            @Override
-//            public void onError(Exception e) {
-//                holder.txtAnsweredBy.setText(e.getMessage());
-//            }
-//        });
-//    }
-
     @Override
     public void onBindViewHolder(@NonNull AnswerViewHolder holder, int position) {
         Answer answer = answers.get(position);
         holder.txtAnswerBody.setText(answer.getText());
         holder.txtAnswerTitle.setText(answer.getTitle());
-        DataManager.getInstance(context).getKindOfUser(answer.getAnsweredByID(), new DataManager.KindOfUserCallback() {
+
+        String answeredByID = answer.getAnsweredByID();
+        if (answeredByID == null) {
+            holder.txtAnsweredBy.setText("Unknown");
+            return; // Exit early since we cannot proceed without an ID
+        }
+
+        DataManager.getInstance(context).getKindOfUser(answeredByID, new DataManager.KindOfUserCallback() {
             @Override
             public void onResult(String kindOfUser) {
                 DatabaseReference baseRef = FirebaseDatabase.getInstance().getReference();
                 DatabaseReference insideRef = null;
 
                 if ("vet".equals(kindOfUser)) {
-                    insideRef = baseRef.child("Veterinarians").child(answer.getAnsweredByID());
+                    insideRef = baseRef.child("Veterinarians").child(answeredByID);
                 } else if ("user".equals(kindOfUser)) {
-                    insideRef = baseRef.child("Users").child(answer.getAnsweredByID());
+                    insideRef = baseRef.child("Users").child(answeredByID);
                 }
 
                 if (insideRef != null) {
@@ -88,12 +69,14 @@ public class AnswerAdapter extends RecyclerView.Adapter<AnswerAdapter.AnswerView
                             if (snapshot.exists()) {
                                 String userName = snapshot.child("name").getValue(String.class);
                                 if ("vet".equals(kindOfUser)) {
-                                    holder.txtAnsweredBy.setText("Vet : " + userName);
+                                    holder.txtAnsweredBy.setText("Vet: " + userName);
                                     holder.txtAnsweredBy.setTypeface(null, Typeface.BOLD);
                                 } else {
                                     holder.txtAnsweredBy.setText(userName);
                                     holder.txtAnsweredBy.setTypeface(null, Typeface.NORMAL);
                                 }
+                            } else {
+                                holder.txtAnsweredBy.setText("Unknown");
                             }
                         }
 
@@ -102,6 +85,8 @@ public class AnswerAdapter extends RecyclerView.Adapter<AnswerAdapter.AnswerView
                             holder.txtAnsweredBy.setText("Unknown");
                         }
                     });
+                } else {
+                    holder.txtAnsweredBy.setText("Unknown");
                 }
             }
 
@@ -111,6 +96,7 @@ public class AnswerAdapter extends RecyclerView.Adapter<AnswerAdapter.AnswerView
             }
         });
     }
+
 
     @Override
     public int getItemCount() {

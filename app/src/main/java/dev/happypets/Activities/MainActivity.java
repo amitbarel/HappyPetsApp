@@ -45,7 +45,14 @@ public class MainActivity extends AppCompatActivity {
 
         AnimatedBottomBar bottomNavigationView = findViewById(R.id.bottomNavigationView);
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-        assert navHostFragment != null;
+
+        if (navHostFragment == null) {
+            navHostFragment = NavHostFragment.create(R.navigation.nav_graph);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, navHostFragment)
+                    .setPrimaryNavigationFragment(navHostFragment)
+                    .commit();
+        }
 
         bottomNavigationView.setOnTabSelectListener(new AnimatedBottomBar.OnTabSelectListener() {
             @Override

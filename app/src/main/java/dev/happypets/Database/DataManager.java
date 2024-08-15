@@ -133,6 +133,34 @@ public class DataManager {
         });
     }
 
+    public void getTwoMostRecentQuestions(OnDataChangeCallback<List<Question>> callback) {
+        questionsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<Question> questions = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Question question = snapshot.getValue(Question.class);
+                    if (question != null) {
+                        Map<String, Answer> answersMap = question.getRelatedAnswers();
+                        if (answersMap != null) {
+                            question.setRelatedAnswers(answersMap);
+                        }
+                        questions.add(question);
+                    }
+                }
+                Collections.sort(questions, (q1, q2) -> q2.getAskedTime().compareTo(q1.getAskedTime()));
+                List<Question> recentQuestions = questions.size() > 2 ? questions.subList(0, 2) : questions;
+
+                callback.onDataChange(recentQuestions);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                callback.onDataChange(Collections.emptyList());
+            }
+        });
+    }
+
 
     public void getQuestionsAnsweredBySpecific(String uid, OnDataChangeCallback<List<Question>> callback) {
         getQuestions(data -> {

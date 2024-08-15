@@ -17,13 +17,24 @@
         android:textColor="@color/black"
         android:textSize="25sp" />
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/header_updates"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/welcome_msg"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="20dp"
+        android:text="New Questions"
+        android:textColor="@color/black" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/question_updates"
         android:layout_width="match_parent"
         android:layout_height="132dp"
-        android:layout_below="@id/welcome_msg"
+        android:layout_below="@id/header_updates"
+        android:layout_marginTop="9dp"
         android:layout_marginHorizontal="30dp"
-        android:background="@color/gray_bg" />
+        tools:listitem="@layout/question_item"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/header_animals"
