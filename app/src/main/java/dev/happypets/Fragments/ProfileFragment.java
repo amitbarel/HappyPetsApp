@@ -22,6 +22,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,6 +36,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -46,16 +48,18 @@ import dev.happypets.Objects.AnimalType;
 import dev.happypets.Objects.Pet;
 import dev.happypets.Objects.Question;
 import dev.happypets.Objects.User;
+import dev.happypets.Objects.Vet;
 import dev.happypets.R;
 
 public class ProfileFragment extends Fragment {
 
+    private MaterialCardView vet_card;
     private RecyclerView my_pets, my_questions;
     private ArrayList<Question> myQuestions;
     private ArrayList<Pet> myPets;
     private QuestionAdapter questionAdapter;
     private PetAdapter petAdapter;
-    private MaterialTextView userTitle, vetTitle, headerUser;
+    private MaterialTextView userTitle, vetTitle, headerUser, headerVet;
     private MaterialButton btn_update;
     private DataManager dataManager;
     private FirebaseUser firebaseUser;
@@ -92,15 +96,71 @@ public class ProfileFragment extends Fragment {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         findViews(view);
+        setupVetCard();
         setupRecyclerViews();
 
         return view;
     }
 
+    private void setupVetCard() {
+        dataManager.getKindOfUser(firebaseUser.getUid(), new DataManager.KindOfUserCallback() {
+            @Override
+            public void onResult(String kindOfUser) {
+                if (kindOfUser.equals("vet")) {
+                    headerVet.setVisibility(View.VISIBLE);
+                    headerUser.setVisibility(View.INVISIBLE);
+                    vet_card.setVisibility(View.VISIBLE);
+                    View view = vet_card.getChildAt(0);
+                    MaterialTextView vetName = view.findViewById(R.id.txt_vetName);
+                    MaterialTextView phone = view.findViewById(R.id.txt_phone);
+                    MaterialTextView address = view.findViewById(R.id.txt_address);
+                    MaterialTextView email = view.findViewById(R.id.txt_email);
+                    MaterialTextView licenseNumber = view.findViewById(R.id.txt_license_number);
+
+                    DataManager.getInstance(getContext()).getCurrentUserName(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (!snapshot.exists()) {
+                                return;
+                            }
+                            Vet vet = snapshot.getValue(Vet.class);
+                            if (vet == null) {
+                            } else {
+                                vetName.setText(vet.getName());
+                                phone.setText(vet.getPhone());
+                                address.setText(vet.getAddress());
+                                email.setText(vet.getEmail());
+                                licenseNumber.setText(vet.getLicenseNumber());
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.d("ProfileFragment", "Failed to read vet data", error.toException());
+                        }
+                    });
+
+
+                } else if (kindOfUser.equals("user")) {
+                    headerVet.setVisibility(View.INVISIBLE);
+                    headerUser.setVisibility(View.VISIBLE);
+                    vet_card.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        });
+    }
+
     private void findViews(View view) {
+        vet_card = view.findViewById(R.id.vet_card);
         my_pets = view.findViewById(R.id.my_pets);
         my_questions = view.findViewById(R.id.my_questions);
         headerUser = view.findViewById(R.id.header_profile);
+        headerVet = view.findViewById(R.id.header_vet);
         userTitle = view.findViewById(R.id.header_questions);
         vetTitle = view.findViewById(R.id.header_questions_v2);
         btn_update = view.findViewById(R.id.btn_update);
@@ -224,13 +284,13 @@ public class ProfileFragment extends Fragment {
                     vetTitle.setVisibility(View.VISIBLE);
                     btn_update.setVisibility(View.INVISIBLE);
                     userTitle.setVisibility(View.INVISIBLE);
-                    my_pets.setVisibility(View.GONE);
+                    my_pets.setVisibility(View.INVISIBLE);
                     headerUser.setVisibility(View.INVISIBLE);
                     fetchVetQuestions();
 
                 } else if (kindOfUser.equals("user")) {
                     userTitle.setVisibility(View.VISIBLE);
-                    vetTitle.setVisibility(View.GONE);
+                    vetTitle.setVisibility(View.INVISIBLE);
                     fetchCurrentUser();
                     my_pets.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
                     petAdapter = new PetAdapter(getContext(), new ArrayList<>());

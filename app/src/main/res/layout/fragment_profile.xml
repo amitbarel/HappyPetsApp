@@ -6,27 +6,61 @@
     android:background="@color/app_bg_color"
     tools:context=".Fragments.ProfileFragment">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/header_profile"
+
+    <RelativeLayout
+        android:id="@+id/headers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:text="My Pets"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="15dp">
 
+        <!-- Header for Regular Users -->
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/header_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="My Pets"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <!-- Header for Veterinarians -->
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/header_vet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="My Details"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:visibility="invisible" />
+
+    </RelativeLayout>
+
+    <!-- RecyclerView for Regular Users' Pets -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/my_pets"
         android:layout_width="match_parent"
         android:layout_height="144dp"
-        android:layout_below="@id/header_profile"
+        android:layout_below="@id/headers"
         android:layout_marginHorizontal="30dp"
         android:orientation="horizontal"
         android:scrollbars="horizontal"
         tools:listitem="@layout/pet_item" />
 
+    <!-- Card for Veterinarian Details -->
+    <include
+        android:id="@+id/vet_card"
+        layout="@layout/vet_details_item"
+        android:layout_below="@id/headers"
+        android:layout_marginHorizontal="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible" />
+
+    <!-- Update Profile Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_update"
         android:layout_width="wrap_content"
@@ -38,42 +72,48 @@
         android:text="Update Profile"
         android:textColor="@color/white" />
 
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/header_questions"
+    <RelativeLayout
+        android:id="@+id/question_headers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="My Questions"
+        android:layout_below="@id/btn_update"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="18dp"
-        android:layout_marginBottom="8dp"
-        android:textColor="@color/black"
-        android:layout_below="@id/btn_update"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:visibility="visible"/>
+        android:layout_marginBottom="8dp">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/header_questions_v2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Questions Answered"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="18dp"
-        android:layout_marginBottom="8dp"
-        android:layout_below="@id/btn_update"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:visibility="invisible" />
+        <!-- Header for Regular Users' Questions -->
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/header_questions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="My Questions"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
+        <!-- Header for Veterinarian's Answered Questions -->
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/header_questions_v2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Questions Answered"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:visibility="invisible" />
+
+    </RelativeLayout>
+
+    <!-- RecyclerView for Questions -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/my_questions"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/question_headers"
         android:layout_marginHorizontal="30dp"
-        android:layout_below="@id/header_questions"
-        android:layout_marginBottom="78dp"
+        android:layout_marginBottom="58dp"
         android:orientation="vertical"
         tools:listitem="@layout/question_item" />
 
