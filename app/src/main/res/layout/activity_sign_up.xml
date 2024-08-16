@@ -59,14 +59,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Veterinarian"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    style="@style/CustomRadioButton"/>
 
                 <RadioButton
                     android:id="@+id/rb_regular_user"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Regular User"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    style="@style/CustomRadioButton"/>
             </RadioGroup>
 
 
@@ -254,8 +256,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:entries="@array/pet_types"
-                    android:popupTheme="@layout/spinner_item"
-                    android:foregroundTint="@color/black" />
+                    android:spinnerMode="dropdown"
+                    android:textColor="@color/black"
+                    style="@style/SpinnerStyle"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_upload_pet_photo"

@@ -1,7 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.HappyPets" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.HappyPets" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/app_bg_color</item>
+        <item name="radioButtonStyle">@style/CustomRadioButton</item>
 
     </style>
 
@@ -22,4 +23,8 @@
     </style>
 
     <style name="Theme.HappyPets" parent="Base.Theme.HappyPets" />
+
+    <style name="CustomRadioButton" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:buttonTint">@color/black</item>
+    </style>
 </resources>

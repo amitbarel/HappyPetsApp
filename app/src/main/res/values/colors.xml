@@ -6,6 +6,6 @@
     <color name="royal_blue">#0074B7</color>
     <color name="logo_color">#003B73</color>
     <color name="gray_bg">#F5F5F5</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
 </resources>
