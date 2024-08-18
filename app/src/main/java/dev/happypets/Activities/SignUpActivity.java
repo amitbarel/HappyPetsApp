@@ -91,8 +91,8 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
-        btn_vet_upload_license.setOnClickListener(v -> openFileChooser());
-        btn_upload_pet_photo.setOnClickListener(v -> openFileChooser());
+        btn_vet_upload_license.setOnClickListener(v -> openFileChooser(PICK_IMAGE_REQUEST_VET));
+        btn_upload_pet_photo.setOnClickListener(v -> openFileChooser(PICK_IMAGE_REQUEST));
         btn_signup.setOnClickListener(v -> generalSignUp());
     }
 
@@ -121,6 +121,7 @@ public class SignUpActivity extends AppCompatActivity {
     private void uploadVetFile(String vetName, String vetEmail, String vetPhone, String vetAddress, String vetPassword, String vetLicense) {
         if (vetImageUri != null) {
             StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("vet_images/" + UUID.randomUUID().toString());
+
             storageReference.putFile(vetImageUri)
                     .addOnSuccessListener(taskSnapshot -> {
                         Task<Uri> downloadUrl = taskSnapshot.getStorage().getDownloadUrl();
@@ -147,9 +148,15 @@ public class SignUpActivity extends AppCompatActivity {
                                             Toast.makeText(SignUpActivity.this, "Sign up failed. " + errorMessage, Toast.LENGTH_LONG).show();
                                         }
                                     });
+                        }).addOnFailureListener(e -> {
+                            Log.e("SignUpActivity", "Failed to get download URL", e);
+                            Toast.makeText(SignUpActivity.this, "Failed to get download URL", Toast.LENGTH_SHORT).show();
                         });
                     })
-                    .addOnFailureListener(e -> Toast.makeText(SignUpActivity.this, "Upload failed", Toast.LENGTH_SHORT).show());
+                    .addOnFailureListener(e -> {
+                        Log.e("SignUpActivity", "Upload failed", e);
+                        Toast.makeText(SignUpActivity.this, "Upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
         } else {
             Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
         }
@@ -184,64 +191,106 @@ public class SignUpActivity extends AppCompatActivity {
                                             User user = new User(userName, userEmail, userPassword, pet);
                                             mDatabase.getReference("Users")
                                                     .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
-                                                    .setValue(user)
-                                                    .addOnCompleteListener(this::onSignupComplete);
+                                                    .setValue(user).addOnCompleteListener(dbTask -> {
+                                                        if (dbTask.isSuccessful()) {
+                                                            onSignupComplete(dbTask);
+                                                        } else {
+                                                            String errorMessage = dbTask.getException() != null ? dbTask.getException().getMessage() : "Unknown error";
+                                                            Log.e("SignUpActivity", "Database write failed: " + errorMessage);
+                                                            Toast.makeText(SignUpActivity.this, "Database write failed. " + errorMessage, Toast.LENGTH_LONG).show();
+                                                        }
+                                                    });
                                         } else {
                                             String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error";
+                                            Log.e("SignUpActivity", "Sign up failed: " + errorMessage);
                                             Toast.makeText(SignUpActivity.this, "Sign up failed. " + errorMessage, Toast.LENGTH_LONG).show();
                                         }
                                     });
                         }).addOnFailureListener(e -> {
-                            Toast.makeText(SignUpActivity.this, "Failed to retrieve download URL: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Log.e("SignUpActivity", "Failed to get download URL", e);
+                            Toast.makeText(SignUpActivity.this, "Failed to get download URL", Toast.LENGTH_SHORT).show();
                         });
                     })
                     .addOnFailureListener(e -> {
+                        Log.e("SignUpActivity", "Upload failed", e);
                         Toast.makeText(SignUpActivity.this, "Upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        Log.e("UploadError", "Error uploading file", e);
                     });
         } else {
-            Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
         }
     }
 
-
     private boolean validateVetFields(String vetName, String vetEmail, String vetPhone, String vetAddress, String vetPassword, String vetLicense) {
-        if (vetName.isEmpty() || vetEmail.isEmpty() || vetPhone.isEmpty() || vetAddress.isEmpty() || vetPassword.isEmpty() || vetLicense.isEmpty()) {
-            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+        if (vetName.isEmpty()) {
+            vet_name.setError("Name is required");
+            vet_name.requestFocus();
             return false;
         }
         if (!Patterns.EMAIL_ADDRESS.matcher(vetEmail).matches()) {
-            Toast.makeText(this, "Invalid email format", Toast.LENGTH_SHORT).show();
+            vet_email.setError("Please provide a valid email");
+            vet_email.requestFocus();
             return false;
         }
-        if (vetPassword.length() < 6) {
-            Toast.makeText(this, "Password too short", Toast.LENGTH_SHORT).show();
+        if (vetPhone.isEmpty()) {
+            vet_phone.setError("Phone number is required");
+            vet_phone.requestFocus();
+            return false;
+        }
+        if (vetAddress.isEmpty()) {
+            vet_address.setError("Address is required");
+            vet_address.requestFocus();
+            return false;
+        }
+        if (vetPassword.isEmpty() || vetPassword.length() < 6) {
+            vet_password.setError("Password must be at least 6 characters");
+            vet_password.requestFocus();
+            return false;
+        }
+        if (vetLicense.isEmpty()) {
+            vet_license.setError("License number is required");
+            vet_license.requestFocus();
             return false;
         }
         return true;
     }
 
     private boolean validateUserFields(String userName, String userEmail, String userPassword, String petName) {
-        if (userName.isEmpty() || userEmail.isEmpty() || userPassword.isEmpty() || petName.isEmpty()) {
-            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+        if (userName.isEmpty()) {
+            user_name.setError("Name is required");
+            user_name.requestFocus();
             return false;
         }
         if (!Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
-            Toast.makeText(this, "Invalid email format", Toast.LENGTH_SHORT).show();
+            user_email.setError("Please provide a valid email");
+            user_email.requestFocus();
             return false;
         }
-        if (userPassword.length() < 6) {
-            Toast.makeText(this, "Password too short", Toast.LENGTH_SHORT).show();
+        if (userPassword.isEmpty() || userPassword.length() < 6) {
+            user_password.setError("Password must be at least 6 characters");
+            user_password.requestFocus();
+            return false;
+        }
+        if (petName.isEmpty()) {
+            pet_name.setError("Pet name is required");
+            pet_name.requestFocus();
             return false;
         }
         return true;
     }
 
-    private void openFileChooser() {
+    private void onSignupComplete(@NonNull Task<Void> dbTask) {
+        Toast.makeText(SignUpActivity.this, "Sign up successful!", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    private void openFileChooser(int requestCode) {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), requestCode);
     }
 
     @Override
@@ -253,16 +302,6 @@ public class SignUpActivity extends AppCompatActivity {
             } else if (requestCode == PICK_IMAGE_REQUEST_VET) {
                 vetImageUri = data.getData();
             }
-        }
-    }
-
-    private void onSignupComplete(@NonNull Task<Void> task) {
-        if (task.isSuccessful()) {
-            Toast.makeText(this, "Sign up successful", Toast.LENGTH_SHORT).show();
-            finish(); // Finish activity or navigate to another screen
-        } else {
-            String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error";
-            Toast.makeText(this, "Sign up failed. " + errorMessage, Toast.LENGTH_LONG).show();
         }
     }
 }
