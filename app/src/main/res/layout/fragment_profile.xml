@@ -43,7 +43,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/my_pets"
         android:layout_width="match_parent"
-        android:layout_height="144dp"
+        android:layout_height="150dp"
         android:layout_below="@id/headers"
         android:layout_marginHorizontal="30dp"
         android:orientation="horizontal"

@@ -117,7 +117,6 @@ public class ExistingQuestionActivity extends AppCompatActivity {
                                         relatedAnswers.setAdapter(answerAdapter);
                                     }
                                 }));
-                                finish();
                             }
                         });
                         dialog.setCancelable(true);
