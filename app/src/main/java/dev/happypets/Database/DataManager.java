@@ -225,26 +225,60 @@ public class DataManager {
 
     public void getFavoriteQuestions(String email, final OnQuestionsRetrievedListener listener) {
         ArrayList<Question> favoriteQuestions = new ArrayList<>();
-        DatabaseReference favoritesRef = firebaseDatabase.getReference("Users");
-        favoritesRef.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference userRef = firebaseDatabase.getReference("Users");
+        DatabaseReference vetRef = firebaseDatabase.getReference("Veterinarians");
+        getKindOfUser(DataManager.instance.getCurrentUserId(), new KindOfUserCallback(){
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                    DataSnapshot favoritesSnapshot = userSnapshot.child("favoriteQuestions");
-                    for (DataSnapshot snapshot : favoritesSnapshot.getChildren()) {
-                        Question question = snapshot.getValue(Question.class);
-                        if (question != null) {
-                            favoriteQuestions.add(question);
+            public void onResult(String kindOfUser) {
+                if (kindOfUser.equals("user")){
+                    userRef.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                                DataSnapshot favoritesSnapshot = userSnapshot.child("favoriteQuestions");
+                                for (DataSnapshot snapshot : favoritesSnapshot.getChildren()) {
+                                    Question question = snapshot.getValue(Question.class);
+                                    if (question != null) {
+                                        favoriteQuestions.add(question);
+                                    }
+                                }
+                            }
+                            listener.onQuestionsRetrieved(favoriteQuestions);
                         }
-                    }
-                }
-                listener.onQuestionsRetrieved(favoriteQuestions);
-            }
 
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.e("DataManager", "Failed to get favorite questions", databaseError.toException());
+                            listener.onQuestionsRetrieved(favoriteQuestions);
+                        }
+                    });
+                } else if (kindOfUser.equals("vet")){
+                    vetRef.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                                DataSnapshot favoritesSnapshot = userSnapshot.child("favoriteQuestions");
+                                for (DataSnapshot snapshot : favoritesSnapshot.getChildren()) {
+                                    Question question = snapshot.getValue(Question.class);
+                                    if (question != null) {
+                                        favoriteQuestions.add(question);
+                                    }
+                                }
+                            }
+                            listener.onQuestionsRetrieved(favoriteQuestions);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.e("DataManager", "Failed to get favorite questions", databaseError.toException());
+                            listener.onQuestionsRetrieved(favoriteQuestions);
+                        }
+                    });
+                }
+            }
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e("DataManager", "Failed to get favorite questions", databaseError.toException());
-                listener.onQuestionsRetrieved(favoriteQuestions);
+            public void onError(Exception e) {
+                Log.e("DataManager", "Error getting kind of user: " + e.getMessage());
             }
         });
     }
@@ -385,18 +419,65 @@ public class DataManager {
     }
 
     public void addFavoriteQuestion(String userId, Question question, Runnable onComplete) {
-        DatabaseReference favoritesRef = firebaseDatabase.getReference("Users").child(userId).child("favoriteQuestions");
-        favoritesRef.child(question.getQuestionId()).setValue(question).addOnCompleteListener(task -> onComplete.run());
+        getKindOfUser(userId, new KindOfUserCallback() {
+
+            @Override
+            public void onResult(String kindOfUser) {
+                if (kindOfUser.equals("user")){
+                    DatabaseReference userFavoritesRef = firebaseDatabase.getReference("Users").child(userId).child("favoriteQuestions");
+                    userFavoritesRef.child(question.getQuestionId()).setValue(question).addOnCompleteListener(task -> onComplete.run());
+                } else {
+                    DatabaseReference vetFavoritesRef = firebaseDatabase.getReference("Veterinarians").child(userId).child("favoriteQuestions");
+                    vetFavoritesRef.child(question.getQuestionId()).setValue(question).addOnCompleteListener(task -> onComplete.run());
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.e("DataManager", "Error getting kind of user: " + e.getMessage());
+            }
+        });
     }
 
     public void removeFavoriteQuestion(String userId, Question question, Runnable onComplete) {
-        DatabaseReference favoritesRef = firebaseDatabase.getReference("Users").child(userId).child("favoriteQuestions");
-        favoritesRef.child(question.getQuestionId()).removeValue().addOnCompleteListener(task -> onComplete.run());
+        getKindOfUser(userId, new KindOfUserCallback(){
+
+            @Override
+            public void onResult(String kindOfUser) {
+                if (kindOfUser.equals("user")){
+                    DatabaseReference userFavoritesRef = firebaseDatabase.getReference("Users").child(userId).child("favoriteQuestions");
+                    userFavoritesRef.child(question.getQuestionId()).removeValue().addOnCompleteListener(task -> onComplete.run());
+                } else if (kindOfUser.equals("vet")){
+                    DatabaseReference vetFavoritesRef = firebaseDatabase.getReference("Veterinarians").child(userId).child("favoriteQuestions");
+                    vetFavoritesRef.child(question.getQuestionId()).removeValue().addOnCompleteListener(task -> onComplete.run());
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.e("DataManager", "Error getting kind of user: " + e.getMessage());
+            }
+        });
     }
 
     public void listenForFavoriteQuestions(String userId, ValueEventListener listener) {
-        DatabaseReference favoritesRef = firebaseDatabase.getReference("Users").child(userId).child("favoriteQuestions");
-        favoritesRef.addValueEventListener(listener);
+        getKindOfUser(userId, new KindOfUserCallback() {
+            @Override
+            public void onResult(String kindOfUser) {
+                if (kindOfUser.equals("user")){
+                    DatabaseReference userFavoritesRef = firebaseDatabase.getReference("Users").child(userId).child("favoriteQuestions");
+                    userFavoritesRef.addValueEventListener(listener);
+                } else if (kindOfUser.equals("vet")){
+                    DatabaseReference vetFavoritesRef = firebaseDatabase.getReference("Veterinarians").child(userId).child("favoriteQuestions");
+                    vetFavoritesRef.addValueEventListener(listener);
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.e("DataManager", "Error getting kind of user: " + e.getMessage());
+            }
+        });
     }
 
     public interface OnQuestionsRetrievedListener {

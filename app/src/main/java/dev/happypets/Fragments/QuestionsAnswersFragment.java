@@ -35,6 +35,7 @@ import dev.happypets.CallBacks.QuestionCallBack;
 import dev.happypets.Database.DataManager;
 import dev.happypets.Objects.Question;
 import dev.happypets.Objects.User;
+import dev.happypets.Objects.Vet;
 import dev.happypets.R;
 
 public class QuestionsAnswersFragment extends Fragment {
@@ -46,7 +47,7 @@ public class QuestionsAnswersFragment extends Fragment {
     DataManager dataManager;
     ArrayList<Question> questionList;
     FirebaseUser firebaseUser;
-    User currentUser;
+    Object currentUser;
 
     public QuestionsAnswersFragment() {
         // Required empty public constructor
@@ -155,7 +156,7 @@ public class QuestionsAnswersFragment extends Fragment {
                         .setText(body.getText().toString())
                         .setAskedTime(ZonedDateTime.now(ZoneId.of("Asia/Jerusalem")).toLocalTime().toString().substring(0,5))
                         .setCategory(animalKind.getSelectedItem().toString())
-                        .setAskedBy(currentUser);
+                        .setAskedBy((User) currentUser);
                 dataManager.addNewQuestion(newQuestion, question -> {
                     // Update the RecyclerView here
                     ((QuestionAdapter) recyclerQuestions.getAdapter()).addQuestion(question);
@@ -204,7 +205,20 @@ public class QuestionsAnswersFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    currentUser = dataSnapshot.getValue(User.class);
+                    dataManager.getKindOfUser(firebaseUser.getUid(), new DataManager.KindOfUserCallback() {
+                        @Override
+                        public void onResult(String kindOfUser) {
+                            if (kindOfUser.equals("user")){
+                                currentUser = dataSnapshot.getValue(User.class);
+                            } else if (kindOfUser.equals("vet")) {
+                                currentUser = dataSnapshot.getValue(Vet.class);
+                            }
+                        }
+                        @Override
+                        public void onError(Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
                 }
             }
 
@@ -216,8 +230,13 @@ public class QuestionsAnswersFragment extends Fragment {
 
         favQuestions.setOnClickListener(v -> {
             if (currentUser != null) {
-                String userEmail = currentUser.getEmail();
-                dataManager.getFavoriteQuestions(userEmail, favoriteQuestions -> {
+                String email = null;
+                if (currentUser instanceof User) {
+                    email = ((User) currentUser).getEmail();
+                } else if (currentUser instanceof Vet) {
+                    email = ((Vet) currentUser).getEmail();
+                }
+                dataManager.getFavoriteQuestions(email, favoriteQuestions -> {
                     if (favoriteQuestions == null || favoriteQuestions.isEmpty()) {
                         Toast.makeText(getContext(), "No favorite questions found", Toast.LENGTH_SHORT).show();
                     } else {

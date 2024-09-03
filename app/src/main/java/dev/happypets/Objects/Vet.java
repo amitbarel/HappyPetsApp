@@ -1,5 +1,8 @@
 package dev.happypets.Objects;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Vet {
     private String name;
     private String email;
@@ -8,6 +11,8 @@ public class Vet {
     private String password;
     private String licenseNumber;
     private String licenseDocumentUrl;
+    private Map<String, Question> favoriteQuestions;
+
 
     // Default constructor required for calls to DataSnapshot.getValue(Vet.class)
     public Vet() {
@@ -21,6 +26,7 @@ public class Vet {
         this.password = password;
         this.licenseNumber = licenseNumber;
         this.licenseDocumentUrl = licenseDocumentUrl;
+        this.favoriteQuestions = new HashMap<>();
     }
 
     // Getters and Setters
@@ -85,5 +91,13 @@ public class Vet {
     public Vet setLicenseDocumentUrl(String licenseDocumentUrl) {
         this.licenseDocumentUrl = licenseDocumentUrl;
         return this;
+    }
+
+    public Map<String, Question> getFavoriteQuestions() {
+        return favoriteQuestions;
+    }
+
+    public void addToFavoriteQuestions(Question question) {
+        this.favoriteQuestions.put(question.getQuestionId(), question);
     }
 }
